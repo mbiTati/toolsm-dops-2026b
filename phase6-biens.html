@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 6 - Biens & Visites | SuPrealty Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg-dark:#0a0f1a;--bg-card:#111827;--bg-code:#0d1117;--accent-primary:#6366f1;--accent-secondary:#22d3ee;--accent-success:#10b981;--accent-warning:#f59e0b;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:#1e293b;--border-light:#334155;--gradient-primary:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#d946ef 100%);--radius:16px}
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;line-height:1.6}
+    .header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.header-left{display:flex;align-items:center;gap:16px}.back-btn{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--accent-primary);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:500}.header-title{font-size:1.25rem;font-weight:700}.header-title span{color:var(--text-muted);font-weight:400}.header-progress{display:flex;align-items:center;gap:12px}.header-progress-text{font-size:0.9rem;color:var(--text-secondary)}.header-progress-bar{width:200px;height:8px;background:var(--border);border-radius:999px;overflow:hidden}.header-progress-fill{height:100%;background:linear-gradient(135deg,#10b981,#22d3ee);border-radius:999px;transition:width 0.3s}
+    .main-layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 65px)}@media(max-width:1024px){.main-layout{grid-template-columns:1fr}.sidebar{display:none}}
+    .sidebar{background:var(--bg-card);border-right:1px solid var(--border);padding:24px;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto}.sidebar-section{margin-bottom:24px}.sidebar-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px}.sidebar-nav{list-style:none}.sidebar-nav-item{padding:10px 12px;border-radius:8px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--text-secondary);transition:all 0.2s}.sidebar-nav-item:hover{background:rgba(99,102,241,0.1)}.sidebar-nav-item.completed{color:var(--accent-success)}.sidebar-nav-number{width:24px;height:24px;background:var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600}.sidebar-nav-item.completed .sidebar-nav-number{background:rgba(16,185,129,0.2);color:var(--accent-success)}
+    .content{padding:32px;max-width:900px}.content-header{margin-bottom:32px}.content-phase{display:inline-block;background:var(--gradient-primary);color:white;padding:4px 12px;border-radius:999px;font-size:0.8rem;font-weight:600;margin-bottom:12px}.content-title{font-size:2rem;font-weight:800;margin-bottom:8px}.content-subtitle{font-size:1.1rem;color:var(--text-secondary)}
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}.step.completed{border-color:rgba(16,185,129,0.3)}.step.open{border-color:rgba(99,102,241,0.3)}.step-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}.step-header:hover{background:rgba(99,102,241,0.05)}.step-header-left{display:flex;align-items:center;gap:16px}.step-number{width:40px;height:40px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-primary)}.step.completed .step-number{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(34,211,238,0.1));border-color:rgba(16,185,129,0.3);color:var(--accent-success)}.step-info h3{font-size:1rem;font-weight:600;margin-bottom:4px}.step-info p{font-size:0.85rem;color:var(--text-muted)}.step-header-right{display:flex;align-items:center;gap:12px}.step-duration{font-size:0.8rem;color:var(--text-muted);background:var(--border);padding:4px 10px;border-radius:999px}.step-checkbox{width:24px;height:24px;border:2px solid var(--border-light);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}.step-checkbox.checked{background:var(--accent-success);border-color:var(--accent-success)}.step-checkbox.checked::after{content:'✓';color:white;font-weight:700}.step-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.3s}.step.open .step-toggle{transform:rotate(180deg)}.step-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}.step.open .step-body{display:block}
+    .instruction{margin-top:20px}.instruction-title{font-size:0.9rem;font-weight:600;color:var(--accent-secondary);margin-bottom:12px;display:flex;align-items:center;gap:8px}.instruction-title::before{content:'';width:4px;height:16px;background:var(--accent-secondary);border-radius:2px}
+    .tip{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(34,211,238,0.05));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 20px;margin:16px 0;display:flex;gap:12px}.tip-icon{font-size:1.25rem}.tip-content{font-size:0.9rem;color:var(--text-secondary)}.tip-content strong{color:var(--accent-success)}
+    .code-block{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}.code-header{background:var(--border);padding:10px 16px}.code-label{font-size:0.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace}.code-content{padding:16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.7;color:#e2e8f0;white-space:pre-wrap}
+    .visual-preview{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:16px 0;overflow:hidden}.visual-preview-header{background:var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px}.visual-preview-dot{width:12px;height:12px;border-radius:50%}.visual-preview-dot.red{background:#ef4444}.visual-preview-dot.yellow{background:#f59e0b}.visual-preview-dot.green{background:#10b981}.visual-preview-title{margin-left:auto;font-size:0.8rem;color:var(--text-muted)}.visual-preview-content{padding:24px}
+    .property-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:280px}.property-image{height:160px;background:linear-gradient(135deg,#1e293b,#334155);display:flex;align-items:center;justify-content:center;color:var(--text-muted)}.property-content{padding:16px}.property-price{font-size:1.25rem;font-weight:700;color:var(--accent-success)}.property-address{font-size:0.9rem;margin-top:4px}.property-details{display:flex;gap:12px;margin-top:8px;font-size:0.8rem;color:var(--text-muted)}
+    .page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);gap:16px;flex-wrap:wrap}.page-nav-btn{display:flex;align-items:center;gap:12px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text-primary)}.page-nav-btn:hover{border-color:var(--accent-primary)}.page-nav-label{font-size:0.8rem;color:var(--text-muted)}.page-nav-title{font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 6 <span>/ Biens & Visites</span></div>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/12 étapes</span>
+      <div class="header-progress-bar"><div class="header-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Étapes Phase 6</div>
+        <ul class="sidebar-nav" id="sidebar-nav"></ul>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <div class="content-phase">Phase 6 sur 10</div>
+        <h1 class="content-title">Biens & Visites</h1>
+        <p class="content-subtitle">Gère ton portefeuille de biens en mandat et le suivi des visites avec les acquéreurs.</p>
+      </div>
+
+      <div id="steps-container">
+
+        <article class="step open" data-step="1">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">1</div>
+              <div class="step-info">
+                <h3>Page liste des biens</h3>
+                <p>Portefeuille de biens en mandat</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="1"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Aperçu de la page</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Biens</span>
+                </div>
+                <div class="visual-preview-content" style="background:#0a0f1a;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+                  <div class="property-card">
+                    <div class="property-image">📷 Photo</div>
+                    <div class="property-content">
+                      <div class="property-price">385 000 €</div>
+                      <div class="property-address">14 rue des Lilas, Annecy</div>
+                      <div class="property-details"><span>🏠 Maison</span><span>120 m²</span><span>4 ch.</span></div>
+                    </div>
+                  </div>
+                  <div class="property-card">
+                    <div class="property-image">📷 Photo</div>
+                    <div class="property-content">
+                      <div class="property-price">245 000 €</div>
+                      <div class="property-address">8 av. du Lac, Annecy</div>
+                      <div class="property-details"><span>🏢 Appart.</span><span>75 m²</span><span>3 ch.</span></div>
+                    </div>
+                  </div>
+                  <div class="property-card">
+                    <div class="property-image">📷 Photo</div>
+                    <div class="property-content">
+                      <div class="property-price">520 000 €</div>
+                      <div class="property-address">12 ch. des Prés, Seynod</div>
+                      <div class="property-details"><span>🏠 Maison</span><span>180 m²</span><span>5 ch.</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Collection biens</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Requête Supabase</span></div>
+                <div class="code-content">Table: biens
+Filter: agent_id = {{user.id}}
+Select: *, vendeurs(nom, prenom)
+Order: created_at DESC</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">2</div>
+              <div class="step-info">
+                <h3>Formulaire création bien</h3>
+                <p>Ajouter un bien au portefeuille</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="2"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Champs du formulaire</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Données bien</span></div>
+                <div class="code-content">// LIEN
+vendeur_id (select)
+
+// LOCALISATION
+adresse, code_postal, ville, quartier
+
+// CARACTÉRISTIQUES
+type_bien (maison, appartement, terrain, local_commercial)
+surface_habitable, surface_terrain
+nb_pieces, nb_chambres, nb_sdb
+etage, nb_etages_immeuble (si appartement)
+annee_construction
+etat_general
+
+// PRIX
+prix_vente
+honoraires_inclus (boolean)
+montant_honoraires
+
+// MANDAT
+type_mandat (exclusif, simple)
+date_debut_mandat, date_fin_mandat
+numero_mandat
+
+// DESCRIPTION
+titre_annonce
+description_annonce
+points_forts (array)
+
+// PHOTOS
+photos (array d'URLs)
+
+// STATUT
+statut_bien (en_preparation, en_ligne, sous_offre, sous_compromis, vendu, retire)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">3</div>
+              <div class="step-info">
+                <h3>Upload de photos</h3>
+                <p>Gérer les photos du bien</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~25 min</span>
+              <div class="step-checkbox" data-step="3"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Upload vers Supabase Storage</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Workflow upload</span></div>
+                <div class="code-content">// 1. Créer le bucket "biens-photos" dans Supabase Storage
+
+// 2. Dans WeWeb, utilise l'action Supabase Storage Upload
+Action: Supabase Storage - Upload
+Bucket: biens-photos
+Path: {{bienId}}/{{file.name}}
+File: {{file}}
+
+// 3. Récupérer l'URL publique
+Action: Supabase Storage - Get Public URL
+Bucket: biens-photos
+Path: {{uploadedPath}}
+
+// 4. Ajouter l'URL au tableau photos du bien
+Action: Supabase Update
+Table: biens
+Filter: id = {{bienId}}
+Data: { photos: [...existingPhotos, newPhotoUrl] }</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content"><strong>Astuce :</strong> Utilise un composant File Upload de WeWeb qui permet de sélectionner plusieurs fichiers.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">4</div>
+              <div class="step-info">
+                <h3>Fiche détail du bien</h3>
+                <p>Page complète avec galerie</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="4"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Structure de la fiche</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Sections de la page</span></div>
+                <div class="code-content">// HEADER
+Titre + Prix + Statut + Actions (modifier, partager)
+
+// GALERIE PHOTOS
+Carrousel ou grille de photos
+
+// INFOS PRINCIPALES
+Type, surface, pièces, chambres, étage...
+
+// DESCRIPTION
+Titre annonce + Description + Points forts
+
+// INFOS VENDEUR
+Nom, contact (lien vers fiche vendeur)
+
+// INFOS MANDAT
+Type, dates, numéro
+
+// VISITES
+Liste des visites planifiées/effectuées
+
+// ACQUÉREURS INTÉRESSÉS
+Matching avec acquéreurs</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">5</div>
+              <div class="step-info">
+                <h3>Filtres des biens</h3>
+                <p>Par statut, type, prix</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="5"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formule de filtrage</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Filtres combinés</span></div>
+                <div class="code-content">{{biens.data.filter(b => {
+  // Statut
+  if (filterStatut !== 'all' && b.statut_bien !== filterStatut) return false;
+  
+  // Type
+  if (filterType !== 'all' && b.type_bien !== filterType) return false;
+  
+  // Prix
+  if (filterPrixMin && b.prix_vente < filterPrixMin) return false;
+  if (filterPrixMax && b.prix_vente > filterPrixMax) return false;
+  
+  // Surface
+  if (filterSurfaceMin && b.surface_habitable < filterSurfaceMin) return false;
+  
+  // Recherche texte
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    return (b.adresse || '').toLowerCase().includes(q) ||
+           (b.ville || '').toLowerCase().includes(q);
+  }
+  
+  return true;
+})}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="6">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">6</div>
+              <div class="step-info">
+                <h3>Module Visites</h3>
+                <p>Planifier et suivre les visites</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="6"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Collection visites</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Requête Supabase</span></div>
+                <div class="code-content">Table: visites
+Filter: agent_id = {{user.id}}
+Select: *, biens(adresse, ville, prix_vente), acquereurs(nom, prenom, telephone)
+Order: date_visite ASC</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Créer une visite</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Insert visite</span></div>
+                <div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "bien_id": "{{formBienId}}",
+  "acquereur_id": "{{formAcquereurId}}",
+  "date_visite": "{{formDateVisite}}",
+  "heure_visite": "{{formHeureVisite}}",
+  "duree_prevue": {{formDuree || 30}},
+  "type_visite": "{{formTypeVisite}}", // physique, virtuelle
+  "statut_visite": "planifiee",
+  "notes_avant": "{{formNotes}}"
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="7">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">7</div>
+              <div class="step-info">
+                <h3>Compte-rendu de visite</h3>
+                <p>Feedback après visite</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="7"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formulaire compte-rendu</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Champs</span></div>
+                <div class="code-content">niveau_interet: 1-5 (curseur ou étoiles)
+points_positifs: textarea
+points_negatifs: textarea
+questions_client: textarea
+suite_a_donner: select (offre, nouvelle_visite, reflechit, pas_interesse)
+notes_privees: textarea</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Workflow mise à jour</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Update visite</span></div>
+                <div class="code-content">Action: Supabase Update
+Table: visites
+Filter: id = {{visiteId}}
+Data: {
+  "statut_visite": "effectuee",
+  "niveau_interet": {{formNiveauInteret}},
+  "compte_rendu": "{{formCompteRendu}}",
+  "suite_a_donner": "{{formSuite}}"
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="8">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">8</div>
+              <div class="step-info">
+                <h3>Calendrier des visites</h3>
+                <p>Vue calendrier</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="8"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Options d'affichage</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Vues possibles</span></div>
+                <div class="code-content">1. Vue semaine (agenda)
+   - Colonnes = jours
+   - Lignes = heures
+   - Cartes visites positionnées
+
+2. Vue liste
+   - Groupées par jour
+   - Tri chronologique
+
+3. Composant Calendar externe
+   - FullCalendar (si intégré)
+   - Ou composant WeWeb Calendar</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content"><strong>Recommandation :</strong> Commence par une vue liste simple, puis ajoute le calendrier plus tard.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="9">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">9</div>
+              <div class="step-info">
+                <h3>Statistiques par bien</h3>
+                <p>Nb visites, durée en ligne</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="9"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">KPI par bien</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Calculs</span></div>
+                <div class="code-content">// Nombre de visites
+{{visites.data.filter(v => v.bien_id === bienId).length}}
+
+// Visites ce mois
+{{visites.data.filter(v => {
+  return v.bien_id === bienId &&
+         new Date(v.date_visite).getMonth() === new Date().getMonth();
+}).length}}
+
+// Jours en ligne
+{{Math.ceil((new Date() - new Date(bien.date_mise_en_ligne)) / (1000 * 60 * 60 * 24))}}
+
+// Taux de transformation (visites → offres)
+{{(offres.data.filter(o => o.bien_id === bienId).length / 
+   visites.data.filter(v => v.bien_id === bienId).length * 100).toFixed(0)}}%</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="10">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">10</div>
+              <div class="step-info">
+                <h3>Partage de bien</h3>
+                <p>Générer un lien de partage</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="10"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Page publique du bien</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Configuration</span></div>
+                <div class="code-content">// Créer une page publique (sans auth)
+Page: BienPublic
+URL: /bien/:id
+Layout: PublicLayout (ou aucun)
+Auth: Non requis
+
+// Lien de partage
+https://ton-app.weweb.io/bien/{{bienId}}
+
+// Bouton copier le lien
+navigator.clipboard.writeText(shareUrl)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="11">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">11</div>
+              <div class="step-info">
+                <h3>Responsive mobile</h3>
+                <p>Adaptation mobile</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="11"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Ajustements</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Mobile</span></div>
+                <div class="code-content">// Liste biens
+Grid 3 colonnes → 1 colonne
+
+// Fiche bien
+Galerie pleine largeur
+Infos en stack vertical
+
+// Formulaires
+Champs pleine largeur</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="12">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">12</div>
+              <div class="step-info">
+                <h3>Tester le module Biens</h3>
+                <p>Validation</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="12"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Checklist</div>
+              <ul style="list-style:none;margin:16px 0;">
+                <li style="padding:8px 0;">○ Créer un bien avec photos</li>
+                <li style="padding:8px 0;">○ Les filtres fonctionnent</li>
+                <li style="padding:8px 0;">○ Planifier une visite</li>
+                <li style="padding:8px 0;">○ Remplir un compte-rendu</li>
+                <li style="padding:8px 0;">○ Les stats s'affichent</li>
+                <li style="padding:8px 0;">○ Le lien de partage fonctionne</li>
+              </ul>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">🎉</span>
+              <div class="tip-content"><strong>Phase 6 terminée !</strong><br>Tu gères maintenant ton portefeuille de biens et les visites !</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <nav class="page-nav">
+        <a href="phase5-pipeline.html" class="page-nav-btn">
+          <span>←</span>
+          <div><div class="page-nav-label">Précédent</div><div class="page-nav-title">Phase 5 - Pipeline</div></div>
+        </a>
+        <a href="phase7-planning.html" class="page-nav-btn">
+          <div style="text-align:right;"><div class="page-nav-label">Suivant</div><div class="page-nav-title">Phase 7 - Planning</div></div>
+          <span>→</span>
+        </a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY='suprealty_progress',PHASE_ID='phase6',TOTAL_STEPS=12;
+    function loadProgress(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return{}}}
+    function saveProgress(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
+    function updateUI(){const progress=loadProgress(),pp=progress[PHASE_ID]||{steps:{}},cc=Object.values(pp.steps||{}).filter(Boolean).length;document.getElementById('progress-text').textContent=cc+'/'+TOTAL_STEPS+' étapes';document.getElementById('progress-fill').style.width=(cc/TOTAL_STEPS*100)+'%';document.querySelectorAll('.step').forEach(s=>{const n=s.dataset.step,done=pp.steps&&pp.steps[n],cb=s.querySelector('.step-checkbox');if(done){s.classList.add('completed');cb&&cb.classList.add('checked')}else{s.classList.remove('completed');cb&&cb.classList.remove('checked')}});updateSidebar(pp)}
+    function updateSidebar(pp){const nav=document.getElementById('sidebar-nav');nav.innerHTML='';for(let i=1;i<=TOTAL_STEPS;i++){const s=document.querySelector('.step[data-step="'+i+'"]'),t=s?s.querySelector('.step-info h3').textContent:'Étape '+i,done=pp.steps&&pp.steps[i],li=document.createElement('li');li.className='sidebar-nav-item'+(done?' completed':'');li.innerHTML='<span class="sidebar-nav-number">'+i+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+t+'</span>';li.onclick=()=>document.querySelector('.step[data-step="'+i+'"]').scrollIntoView({behavior:'smooth'});nav.appendChild(li)}}
+    function toggleStep(el){document.querySelectorAll('.step.open').forEach(s=>{if(s!==el)s.classList.remove('open')});el.classList.toggle('open')}
+    function toggleCheckbox(n){const p=loadProgress();if(!p[PHASE_ID])p[PHASE_ID]={steps:{}};p[PHASE_ID].steps[n]=!p[PHASE_ID].steps[n];saveProgress(p);updateUI()}
+    document.querySelectorAll('.step-header').forEach(h=>h.addEventListener('click',e=>{if(e.target.closest('.step-checkbox'))return;toggleStep(h.closest('.step'))}));
+    document.querySelectorAll('.step-checkbox').forEach(c=>c.addEventListener('click',e=>{e.stopPropagation();toggleCheckbox(c.dataset.step)}));
+    updateUI();
+  </script>
+</body>
+</html>

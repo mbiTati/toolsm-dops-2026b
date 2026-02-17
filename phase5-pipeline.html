@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 5 - Estimations & Pipeline | SuPrealty Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg-dark:#0a0f1a;--bg-card:#111827;--bg-card-hover:#1a2235;--bg-code:#0d1117;--accent-primary:#6366f1;--accent-secondary:#22d3ee;--accent-success:#10b981;--accent-warning:#f59e0b;--accent-danger:#ef4444;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:#1e293b;--border-light:#334155;--gradient-primary:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#d946ef 100%);--radius:16px}
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;line-height:1.6}
+    .header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.header-left{display:flex;align-items:center;gap:16px}.back-btn{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--accent-primary);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:500}.header-title{font-size:1.25rem;font-weight:700}.header-title span{color:var(--text-muted);font-weight:400}.header-progress{display:flex;align-items:center;gap:12px}.header-progress-text{font-size:0.9rem;color:var(--text-secondary)}.header-progress-bar{width:200px;height:8px;background:var(--border);border-radius:999px;overflow:hidden}.header-progress-fill{height:100%;background:linear-gradient(135deg,#10b981,#22d3ee);border-radius:999px;transition:width 0.3s}
+    .main-layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 65px)}@media(max-width:1024px){.main-layout{grid-template-columns:1fr}.sidebar{display:none}}
+    .sidebar{background:var(--bg-card);border-right:1px solid var(--border);padding:24px;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto}.sidebar-section{margin-bottom:24px}.sidebar-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px}.sidebar-nav{list-style:none}.sidebar-nav-item{padding:10px 12px;border-radius:8px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--text-secondary);transition:all 0.2s}.sidebar-nav-item:hover{background:rgba(99,102,241,0.1);color:var(--text-primary)}.sidebar-nav-item.completed{color:var(--accent-success)}.sidebar-nav-number{width:24px;height:24px;background:var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0}.sidebar-nav-item.completed .sidebar-nav-number{background:rgba(16,185,129,0.2);color:var(--accent-success)}
+    .content{padding:32px;max-width:900px}.content-header{margin-bottom:32px}.content-phase{display:inline-block;background:var(--gradient-primary);color:white;padding:4px 12px;border-radius:999px;font-size:0.8rem;font-weight:600;margin-bottom:12px}.content-title{font-size:2rem;font-weight:800;margin-bottom:8px}.content-subtitle{font-size:1.1rem;color:var(--text-secondary)}
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;transition:all 0.3s}.step.completed{border-color:rgba(16,185,129,0.3)}.step.open{border-color:rgba(99,102,241,0.3)}.step-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}.step-header:hover{background:rgba(99,102,241,0.05)}.step-header-left{display:flex;align-items:center;gap:16px}.step-number{width:40px;height:40px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-primary);flex-shrink:0}.step.completed .step-number{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(34,211,238,0.1));border-color:rgba(16,185,129,0.3);color:var(--accent-success)}.step-info h3{font-size:1rem;font-weight:600;margin-bottom:4px}.step-info p{font-size:0.85rem;color:var(--text-muted)}.step-header-right{display:flex;align-items:center;gap:12px}.step-duration{font-size:0.8rem;color:var(--text-muted);background:var(--border);padding:4px 10px;border-radius:999px}.step-checkbox{width:24px;height:24px;border:2px solid var(--border-light);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}.step-checkbox:hover{border-color:var(--accent-primary)}.step-checkbox.checked{background:var(--accent-success);border-color:var(--accent-success)}.step-checkbox.checked::after{content:'✓';color:white;font-weight:700;font-size:14px}.step-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.3s}.step.open .step-toggle{transform:rotate(180deg)}.step-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}.step.open .step-body{display:block}
+    .instruction{margin-top:20px}.instruction-title{font-size:0.9rem;font-weight:600;color:var(--accent-secondary);margin-bottom:12px;display:flex;align-items:center;gap:8px}.instruction-title::before{content:'';width:4px;height:16px;background:var(--accent-secondary);border-radius:2px}
+    .tip{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(34,211,238,0.05));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 20px;margin:16px 0;display:flex;gap:12px}.tip-icon{font-size:1.25rem;flex-shrink:0}.tip-content{font-size:0.9rem;color:var(--text-secondary)}.tip-content strong{color:var(--accent-success)}
+    .code-block{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}.code-header{background:var(--border);padding:10px 16px}.code-label{font-size:0.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace}.code-content{padding:16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.7;overflow-x:auto;color:#e2e8f0;white-space:pre-wrap}
+    .visual-preview{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:16px 0;overflow:hidden}.visual-preview-header{background:var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px}.visual-preview-dot{width:12px;height:12px;border-radius:50%}.visual-preview-dot.red{background:#ef4444}.visual-preview-dot.yellow{background:#f59e0b}.visual-preview-dot.green{background:#10b981}.visual-preview-title{margin-left:auto;font-size:0.8rem;color:var(--text-muted)}.visual-preview-content{padding:24px}
+    .pipeline-board{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}.pipeline-column{background:rgba(15,23,42,0.5);border:1px solid var(--border);border-radius:12px;padding:12px;min-height:200px}.pipeline-column-header{font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}.pipeline-column-count{background:var(--border);padding:2px 8px;border-radius:999px;font-size:0.75rem}.pipeline-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;cursor:grab}.pipeline-card:hover{border-color:var(--accent-primary)}
+    .page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);gap:16px;flex-wrap:wrap}.page-nav-btn{display:flex;align-items:center;gap:12px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text-primary);transition:all 0.2s}.page-nav-btn:hover{background:var(--bg-card-hover);border-color:var(--accent-primary)}.page-nav-label{font-size:0.8rem;color:var(--text-muted)}.page-nav-title{font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 5 <span>/ Estimations & Pipeline</span></div>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/16 étapes</span>
+      <div class="header-progress-bar"><div class="header-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Étapes Phase 5</div>
+        <ul class="sidebar-nav" id="sidebar-nav"></ul>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <div class="content-phase">Phase 5 sur 10</div>
+        <h1 class="content-title">Estimations & Pipeline</h1>
+        <p class="content-subtitle">Crée le module d'estimations immobilières et le pipeline visuel de suivi des affaires (Kanban).</p>
+      </div>
+
+      <div id="steps-container">
+
+        <article class="step open" data-step="1">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">1</div>
+              <div class="step-info">
+                <h3>Comprendre le pipeline</h3>
+                <p>Les étapes d'une vente immobilière</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~5 min</span>
+              <div class="step-checkbox" data-step="1"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Les colonnes du Pipeline</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Pipeline Kanban</span>
+                </div>
+                <div class="visual-preview-content" style="background:#0a0f1a;">
+                  <div class="pipeline-board">
+                    <div class="pipeline-column" style="border-top:3px solid #6366f1;">
+                      <div class="pipeline-column-header">Prospection <span class="pipeline-column-count">5</span></div>
+                      <div class="pipeline-card"><div style="font-size:0.85rem;font-weight:600;">14 rue des Lilas</div><div style="font-size:0.75rem;color:#64748b;">M. Dupont • B1</div></div>
+                      <div class="pipeline-card"><div style="font-size:0.85rem;font-weight:600;">8 av. du Lac</div><div style="font-size:0.75rem;color:#64748b;">Mme Martin • B2</div></div>
+                    </div>
+                    <div class="pipeline-column" style="border-top:3px solid #22d3ee;">
+                      <div class="pipeline-column-header">Estimation <span class="pipeline-column-count">3</span></div>
+                      <div class="pipeline-card"><div style="font-size:0.85rem;font-weight:600;">12 rue du Port</div><div style="font-size:0.75rem;color:#64748b;">M. Bernard • B1</div></div>
+                    </div>
+                    <div class="pipeline-column" style="border-top:3px solid #f59e0b;">
+                      <div class="pipeline-column-header">Mandat <span class="pipeline-column-count">2</span></div>
+                      <div class="pipeline-card"><div style="font-size:0.85rem;font-weight:600;">5 ch. des Prés</div><div style="font-size:0.75rem;color:#64748b;">Mme Petit</div></div>
+                    </div>
+                    <div class="pipeline-column" style="border-top:3px solid #f97316;">
+                      <div class="pipeline-column-header">Offre <span class="pipeline-column-count">1</span></div>
+                      <div class="pipeline-card"><div style="font-size:0.85rem;font-weight:600;">22 bd Victor Hugo</div><div style="font-size:0.75rem;color:#64748b;">M. Leroy</div></div>
+                    </div>
+                    <div class="pipeline-column" style="border-top:3px solid #10b981;">
+                      <div class="pipeline-column-header">Vendu <span class="pipeline-column-count">1</span></div>
+                      <div class="pipeline-card" style="border-color:#10b981;"><div style="font-size:0.85rem;font-weight:600;">3 rue de la Gare</div><div style="font-size:0.75rem;color:#10b981;">385 000 € ✓</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Les étapes</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Colonnes du pipeline</span></div>
+                <div class="code-content">prospection  → Contact initial avec vendeur potentiel
+estimation   → RDV estimation planifié ou fait
+mandat       → Mandat signé, bien en commercialisation
+offre        → Offre reçue d'un acquéreur
+compromis    → Compromis signé
+vendu        → Acte signé chez le notaire 🎉</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">2</div>
+              <div class="step-info">
+                <h3>Page Estimations</h3>
+                <p>Liste des estimations</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="2"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Structure de la page</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Colonnes du tableau</span></div>
+                <div class="code-content">Adresse du bien | Vendeur | Date estimation | Prix estimé | Statut | Actions</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Collection estimations</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Requête Supabase</span></div>
+                <div class="code-content">Table: estimations
+Filter: agent_id = {{user.id}}
+Select: *, vendeurs(nom, prenom, telephone)
+Order: date_estimation DESC</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">3</div>
+              <div class="step-info">
+                <h3>Formulaire nouvelle estimation</h3>
+                <p>Créer une estimation</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="3"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Champs du formulaire</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Données estimation</span></div>
+                <div class="code-content">// LIEN VENDEUR
+vendeur_id (select depuis liste vendeurs)
+
+// BIEN
+adresse_bien, code_postal, ville
+type_bien (maison, appartement, terrain...)
+surface_habitable, surface_terrain
+nb_pieces, nb_chambres, nb_sdb
+annee_construction
+etat_general (neuf, bon, travaux_legers, travaux_lourds)
+
+// ESTIMATION
+prix_bas, prix_moyen, prix_haut
+methode_estimation (comparaison, capitalisation, cout)
+date_estimation
+notes
+
+// COMPARABLES (optionnel)
+comparables (array de biens similaires vendus)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">4</div>
+              <div class="step-info">
+                <h3>Calcul automatique du prix</h3>
+                <p>Fourchette de prix suggérée</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="4"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formule de suggestion</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Prix au m² par type</span></div>
+                <div class="code-content">// Prix moyens indicatifs (à personnaliser selon ton secteur)
+const prixM2 = {
+  'appartement': { bas: 3500, moyen: 4000, haut: 4500 },
+  'maison': { bas: 3000, moyen: 3500, haut: 4000 },
+  'terrain': { bas: 150, moyen: 200, haut: 250 }
+};
+
+// Coefficients état
+const coefEtat = {
+  'neuf': 1.15,
+  'bon': 1.0,
+  'travaux_legers': 0.9,
+  'travaux_lourds': 0.75
+};
+
+// Calcul
+const base = prixM2[typeBien];
+const coef = coefEtat[etatGeneral];
+const surface = surfaceHabitable;
+
+const prixBas = Math.round(base.bas * surface * coef);
+const prixMoyen = Math.round(base.moyen * surface * coef);
+const prixHaut = Math.round(base.haut * surface * coef);</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content"><strong>Ces prix sont indicatifs.</strong> Tu ajusteras manuellement selon ta connaissance du marché local.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">5</div>
+              <div class="step-info">
+                <h3>Page Pipeline (Kanban)</h3>
+                <p>Vue visuelle des affaires</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~25 min</span>
+              <div class="step-checkbox" data-step="5"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Structure de la page</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Layout Kanban</span></div>
+                <div class="code-content">// Container Grid avec 6 colonnes
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+gap: 16px;
+overflow-x: auto; // Pour scroll horizontal sur mobile
+
+// Chaque colonne
+min-width: 250px;
+background: rgba(15, 23, 42, 0.5);
+border-radius: 12px;
+padding: 16px;</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Filtrer les affaires par colonne</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Formule par colonne</span></div>
+                <div class="code-content">// Colonne "Prospection"
+{{vendeurs.data.filter(v => v.statut_vendeur === 'nouveau' || v.statut_vendeur === 'a_rappeler')}}
+
+// Colonne "Estimation"
+{{vendeurs.data.filter(v => v.statut_vendeur === 'estimation_planifiee' || v.statut_vendeur === 'estimation_faite')}}
+
+// Colonne "Mandat"
+{{vendeurs.data.filter(v => v.statut_vendeur === 'mandat_signe')}}
+
+// Colonne "Offre"
+// Ici on utilise la table offres
+{{offres.data.filter(o => o.statut_offre === 'en_attente' || o.statut_offre === 'en_negociation')}}
+
+// Colonne "Compromis"
+{{ventes.data.filter(v => v.statut_vente === 'compromis_signe')}}
+
+// Colonne "Vendu"
+{{ventes.data.filter(v => v.statut_vente === 'acte_signe')}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="6">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">6</div>
+              <div class="step-info">
+                <h3>Cartes du pipeline</h3>
+                <p>Design des cartes d'affaires</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="6"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Contenu d'une carte</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Informations affichées</span></div>
+                <div class="code-content">// Ligne 1 : Adresse du bien
+{{item.adresse_bien}}
+
+// Ligne 2 : Nom vendeur + Scoring
+{{item.prenom}} {{item.nom}} • {{item.scoring}}
+
+// Ligne 3 : Prix estimé (si disponible)
+{{item.prix_estime ? item.prix_estime.toLocaleString('fr-FR') + ' €' : ''}}
+
+// Badge de délai (si date de rappel proche)
+// Afficher J-3, J-1, etc.</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="7">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">7</div>
+              <div class="step-info">
+                <h3>Drag & Drop (avancé)</h3>
+                <p>Déplacer les cartes entre colonnes</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~30 min</span>
+              <div class="step-checkbox" data-step="7"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Option 1 : Menu déroulant</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Plus simple à implémenter : un bouton sur chaque carte qui ouvre un menu pour changer de statut.</p>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Workflow changeStatut</span></div>
+                <div class="code-content">// Au clic sur une option du menu
+1. Supabase Update → statut_vendeur = newStatut
+2. Refresh collection vendeurs</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Option 2 : Vrai Drag & Drop</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Nécessite un composant Kanban externe ou du JavaScript custom avec l'API HTML5 Drag and Drop.</p>
+              <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content"><strong>Recommandation :</strong> Commence par l'option 1 (menu). Tu pourras ajouter le drag & drop plus tard.</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="8">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">8</div>
+              <div class="step-info">
+                <h3>Compteurs par colonne</h3>
+                <p>Nombre d'affaires par étape</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="8"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formules des compteurs</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Compteurs</span></div>
+                <div class="code-content">// Prospection
+{{vendeurs.data.filter(v => ['nouveau', 'a_rappeler'].includes(v.statut_vendeur)).length}}
+
+// Estimation
+{{vendeurs.data.filter(v => v.statut_vendeur.startsWith('estimation')).length}}
+
+// etc.</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="9">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">9</div>
+              <div class="step-info">
+                <h3>Valeur du pipeline</h3>
+                <p>CA potentiel par colonne</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="9"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Calcul du CA potentiel</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Formule CA</span></div>
+                <div class="code-content">// Honoraires moyens estimés (ex: 4% du prix)
+const tauxHonoraires = 0.04;
+
+// CA potentiel colonne Mandat
+{{vendeurs.data
+  .filter(v => v.statut_vendeur === 'mandat_signe')
+  .reduce((sum, v) => sum + (v.prix_estime * tauxHonoraires), 0)
+  .toLocaleString('fr-FR')}} €
+
+// CA en offre
+{{offres.data
+  .filter(o => o.statut_offre === 'en_negociation')
+  .reduce((sum, o) => sum + (o.honoraires_prevus || 0), 0)
+  .toLocaleString('fr-FR')}} €</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="10">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">10</div>
+              <div class="step-info">
+                <h3>Filtres du pipeline</h3>
+                <p>Par période, type de bien, secteur</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="10"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Variables de filtre</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Filtres</span></div>
+                <div class="code-content">filterPeriode: 'all' | 'this_month' | 'this_quarter' | 'this_year'
+filterTypeBien: 'all' | 'maison' | 'appartement' | ...
+filterSecteur: 'all' | 'annecy' | 'seynod' | ...</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="11">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">11</div>
+              <div class="step-info">
+                <h3>Détail d'une affaire</h3>
+                <p>Sidebar ou modal au clic</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="11"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Panneau latéral</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Au clic sur une carte, affiche un panneau latéral avec toutes les infos de l'affaire + actions rapides.</p>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Contenu du panneau</span></div>
+                <div class="code-content">// Infos vendeur
+Nom, téléphone, email
+
+// Infos bien
+Adresse, type, surface, prix
+
+// Scoring
+Score B1-B5 avec détail des critères
+
+// Historique
+Timeline des interactions
+
+// Actions
+- Changer le statut
+- Planifier un rappel
+- Créer une estimation
+- Voir la fiche complète</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="12">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">12</div>
+              <div class="step-info">
+                <h3>Créer une vente</h3>
+                <p>Enregistrer une vente signée</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="12"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Workflow enregistrer vente</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Insert vente</span></div>
+                <div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "vendeur_id": "{{vendeurId}}",
+  "acquereur_id": "{{acquereurId}}",
+  "bien_id": "{{bienId}}",
+  "prix_vente": {{formPrixVente}},
+  "honoraires_agent": {{formHonoraires}},
+  "date_compromis": "{{formDateCompromis}}",
+  "date_signature_acte": "{{formDateActe}}",
+  "notaire_vendeur": "{{formNotaireVendeur}}",
+  "notaire_acquereur": "{{formNotaireAcquereur}}",
+  "statut_vente": "compromis_signe"
+}
+
+// Mettre à jour les statuts
+UPDATE vendeurs SET statut_vendeur = 'vendu' WHERE id = vendeurId
+UPDATE acquereurs SET statut_acquereur = 'acheteur' WHERE id = acquereurId
+UPDATE biens SET statut_bien = 'vendu' WHERE id = bienId</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="13">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">13</div>
+              <div class="step-info">
+                <h3>Statistiques du pipeline</h3>
+                <p>Taux de conversion, délais moyens</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="13"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">KPI du pipeline</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Métriques clés</span></div>
+                <div class="code-content">// Taux de conversion Prospection → Mandat
+const prospection = vendeurs.data.filter(v => v.statut_vendeur !== 'archive').length;
+const mandats = vendeurs.data.filter(v => v.statut_vendeur === 'mandat_signe').length;
+const tauxConversion = Math.round((mandats / prospection) * 100);
+// Résultat: "23%"
+
+// Délai moyen Prospection → Mandat
+// Nécessite de stocker les dates de changement de statut
+
+// CA du mois
+const caMois = ventes.data
+  .filter(v => new Date(v.date_signature_acte).getMonth() === new Date().getMonth())
+  .reduce((sum, v) => sum + v.honoraires_agent, 0);</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="14">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">14</div>
+              <div class="step-info">
+                <h3>Alertes pipeline</h3>
+                <p>Affaires bloquées, relances</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="14"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Identifier les affaires bloquées</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Affaires sans activité depuis X jours</span></div>
+                <div class="code-content">// Affaires sans interaction depuis 7 jours
+{{vendeurs.data.filter(v => {
+  const lastUpdate = new Date(v.updated_at);
+  const now = new Date();
+  const daysSinceUpdate = Math.ceil((now - lastUpdate) / (1000 * 60 * 60 * 24));
+  return daysSinceUpdate > 7 && 
+         !['vendu', 'archive', 'perdu'].includes(v.statut_vendeur);
+})}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="15">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">15</div>
+              <div class="step-info">
+                <h3>Responsive mobile</h3>
+                <p>Pipeline en vue liste sur mobile</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="15"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Alternatives mobile</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Sur mobile, le Kanban en colonnes n'est pas pratique. Options :</p>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Options mobile</span></div>
+                <div class="code-content">1. Vue liste avec onglets par statut
+2. Scroll horizontal (overflow-x: auto)
+3. Accordion avec sections dépliables</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="16">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">16</div>
+              <div class="step-info">
+                <h3>Tester le pipeline</h3>
+                <p>Validation complète</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="16"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Checklist</div>
+              <ul style="list-style:none;margin:16px 0;">
+                <li style="padding:8px 0;">○ Créer une estimation</li>
+                <li style="padding:8px 0;">○ Les cartes s'affichent dans les bonnes colonnes</li>
+                <li style="padding:8px 0;">○ Changer le statut d'une affaire</li>
+                <li style="padding:8px 0;">○ Les compteurs sont corrects</li>
+                <li style="padding:8px 0;">○ La valeur du pipeline est calculée</li>
+                <li style="padding:8px 0;">○ Enregistrer une vente</li>
+                <li style="padding:8px 0;">○ Les filtres fonctionnent</li>
+              </ul>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">🎉</span>
+              <div class="tip-content"><strong>Phase 5 terminée !</strong><br>Tu as un pipeline visuel pour suivre toutes tes affaires !</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <nav class="page-nav">
+        <a href="phase4-acquereurs.html" class="page-nav-btn">
+          <span>←</span>
+          <div><div class="page-nav-label">Précédent</div><div class="page-nav-title">Phase 4 - Acquéreurs</div></div>
+        </a>
+        <a href="phase6-biens.html" class="page-nav-btn">
+          <div style="text-align:right;"><div class="page-nav-label">Suivant</div><div class="page-nav-title">Phase 6 - Biens</div></div>
+          <span>→</span>
+        </a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY='suprealty_progress',PHASE_ID='phase5',TOTAL_STEPS=16;
+    function loadProgress(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return{}}}
+    function saveProgress(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
+    function updateUI(){const progress=loadProgress(),pp=progress[PHASE_ID]||{steps:{}},cc=Object.values(pp.steps||{}).filter(Boolean).length;document.getElementById('progress-text').textContent=cc+'/'+TOTAL_STEPS+' étapes';document.getElementById('progress-fill').style.width=(cc/TOTAL_STEPS*100)+'%';document.querySelectorAll('.step').forEach(s=>{const n=s.dataset.step,done=pp.steps&&pp.steps[n],cb=s.querySelector('.step-checkbox');if(done){s.classList.add('completed');cb&&cb.classList.add('checked')}else{s.classList.remove('completed');cb&&cb.classList.remove('checked')}});updateSidebar(pp)}
+    function updateSidebar(pp){const nav=document.getElementById('sidebar-nav');nav.innerHTML='';for(let i=1;i<=TOTAL_STEPS;i++){const s=document.querySelector('.step[data-step="'+i+'"]'),t=s?s.querySelector('.step-info h3').textContent:'Étape '+i,done=pp.steps&&pp.steps[i],li=document.createElement('li');li.className='sidebar-nav-item'+(done?' completed':'');li.innerHTML='<span class="sidebar-nav-number">'+i+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+t+'</span>';li.onclick=()=>document.querySelector('.step[data-step="'+i+'"]').scrollIntoView({behavior:'smooth'});nav.appendChild(li)}}
+    function toggleStep(el){document.querySelectorAll('.step.open').forEach(s=>{if(s!==el)s.classList.remove('open')});el.classList.toggle('open')}
+    function toggleCheckbox(n){const p=loadProgress();if(!p[PHASE_ID])p[PHASE_ID]={steps:{}};p[PHASE_ID].steps[n]=!p[PHASE_ID].steps[n];saveProgress(p);updateUI()}
+    document.querySelectorAll('.step-header').forEach(h=>h.addEventListener('click',e=>{if(e.target.closest('.step-checkbox'))return;toggleStep(h.closest('.step'))}));
+    document.querySelectorAll('.step-checkbox').forEach(c=>c.addEventListener('click',e=>{e.stopPropagation();toggleCheckbox(c.dataset.step)}));
+    updateUI();
+  </script>
+</body>
+</html>

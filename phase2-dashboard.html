@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 2 - Dashboard & Navigation | SuPrealty Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f1a;
+      --bg-card: #111827;
+      --bg-card-hover: #1a2235;
+      --bg-code: #0d1117;
+      --accent-primary: #6366f1;
+      --accent-secondary: #22d3ee;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #1e293b;
+      --border-light: #334155;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      --gradient-success: linear-gradient(135deg, #10b981 0%, #22d3ee 100%);
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; }
+    
+    .header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--accent-primary); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .back-btn:hover { background: rgba(99, 102, 241, 0.2); }
+    .header-title { font-size: 1.25rem; font-weight: 700; }
+    .header-title span { color: var(--text-muted); font-weight: 400; }
+    .header-progress { display: flex; align-items: center; gap: 12px; }
+    .header-progress-text { font-size: 0.9rem; color: var(--text-secondary); }
+    .header-progress-bar { width: 200px; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .header-progress-fill { height: 100%; background: var(--gradient-success); border-radius: 999px; transition: width 0.3s; }
+    
+    .main-layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 65px); }
+    @media (max-width: 1024px) { .main-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    
+    .sidebar { background: var(--bg-card); border-right: 1px solid var(--border); padding: 24px; position: sticky; top: 65px; height: calc(100vh - 65px); overflow-y: auto; }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 12px; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav-item { padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-secondary); transition: all 0.2s; }
+    .sidebar-nav-item:hover { background: rgba(99, 102, 241, 0.1); color: var(--text-primary); }
+    .sidebar-nav-item.completed { color: var(--accent-success); }
+    .sidebar-nav-number { width: 24px; height: 24px; background: var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    .sidebar-nav-item.completed .sidebar-nav-number { background: rgba(16, 185, 129, 0.2); color: var(--accent-success); }
+    
+    .content { padding: 32px; max-width: 900px; }
+    .content-header { margin-bottom: 32px; }
+    .content-phase { display: inline-block; background: var(--gradient-primary); color: white; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; }
+    .content-title { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .content-subtitle { font-size: 1.1rem; color: var(--text-secondary); }
+    
+    .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; transition: all 0.3s; }
+    .step.completed { border-color: rgba(16, 185, 129, 0.3); }
+    .step.open { border-color: rgba(99, 102, 241, 0.3); }
+    .step-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+    .step-header:hover { background: rgba(99, 102, 241, 0.05); }
+    .step-header-left { display: flex; align-items: center; gap: 16px; }
+    .step-number { width: 40px; height: 40px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1)); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--accent-primary); flex-shrink: 0; }
+    .step.completed .step-number { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(34, 211, 238, 0.1)); border-color: rgba(16, 185, 129, 0.3); color: var(--accent-success); }
+    .step-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .step-info p { font-size: 0.85rem; color: var(--text-muted); }
+    .step-header-right { display: flex; align-items: center; gap: 12px; }
+    .step-duration { font-size: 0.8rem; color: var(--text-muted); background: var(--border); padding: 4px 10px; border-radius: 999px; }
+    .step-checkbox { width: 24px; height: 24px; border: 2px solid var(--border-light); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .step-checkbox:hover { border-color: var(--accent-primary); }
+    .step-checkbox.checked { background: var(--accent-success); border-color: var(--accent-success); }
+    .step-checkbox.checked::after { content: '✓'; color: white; font-weight: 700; font-size: 14px; }
+    .step-toggle { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: transform 0.3s; }
+    .step.open .step-toggle { transform: rotate(180deg); }
+    .step-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--border); }
+    .step.open .step-body { display: block; }
+    
+    .instruction { margin-top: 20px; }
+    .instruction-title { font-size: 0.9rem; font-weight: 600; color: var(--accent-secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .instruction-title::before { content: ''; width: 4px; height: 16px; background: var(--accent-secondary); border-radius: 2px; }
+    
+    .path-block { background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(99, 102, 241, 0.05)); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 16px 20px; margin: 12px 0; }
+    .path-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-secondary); margin-bottom: 8px; }
+    .path-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .path-step { background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.3); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: var(--text-primary); }
+    .path-arrow { color: var(--text-muted); font-size: 1.2rem; }
+    
+    .steps-list { list-style: none; margin: 12px 0; counter-reset: step-counter; }
+    .steps-list li { padding: 12px 16px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 12px; font-size: 0.9rem; }
+    .steps-list li::before { content: counter(step-counter); counter-increment: step-counter; background: var(--accent-primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    
+    .tip { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(34, 211, 238, 0.05)); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 16px 20px; margin: 16px 0; display: flex; gap: 12px; }
+    .tip-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .tip-content { font-size: 0.9rem; color: var(--text-secondary); }
+    .tip-content strong { color: var(--accent-success); }
+    
+    .warning { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 16px 20px; margin: 16px 0; display: flex; gap: 12px; }
+    .warning-content { font-size: 0.9rem; color: var(--text-secondary); }
+    .warning-content strong { color: var(--accent-warning); }
+    
+    .input-preview { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin: 8px 0; }
+    .input-preview-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
+    .input-preview-value { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent-secondary); }
+    
+    .visual-preview { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+    .visual-preview-header { background: var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 8px; }
+    .visual-preview-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .visual-preview-dot.red { background: #ef4444; }
+    .visual-preview-dot.yellow { background: #f59e0b; }
+    .visual-preview-dot.green { background: #10b981; }
+    .visual-preview-title { margin-left: auto; font-size: 0.8rem; color: var(--text-muted); }
+    .visual-preview-content { padding: 24px; }
+    
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; overflow: hidden; }
+    .code-header { background: var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .code-label { font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+    .code-content { padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7; overflow-x: auto; color: #e2e8f0; white-space: pre-wrap; }
+    
+    .workflow-step { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .workflow-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .workflow-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; color: white; }
+    .workflow-num.primary { background: var(--accent-primary); }
+    .workflow-num.success { background: var(--accent-success); }
+    .workflow-num.warning { background: var(--accent-warning); }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+    .kpi-card { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .kpi-value { font-size: 1.75rem; font-weight: 700; color: var(--accent-primary); }
+    .kpi-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    
+    .page-nav { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); gap: 16px; flex-wrap: wrap; }
+    .page-nav-btn { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+    .page-nav-btn:hover { background: var(--bg-card-hover); border-color: var(--accent-primary); }
+    .page-nav-label { font-size: 0.8rem; color: var(--text-muted); }
+    .page-nav-title { font-weight: 600; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .content-title { font-size: 1.5rem; }
+      .step-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .step-header-right { width: 100%; justify-content: space-between; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 2 <span>/ Dashboard & Navigation</span></div>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/12 étapes</span>
+      <div class="header-progress-bar">
+        <div class="header-progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Étapes Phase 2</div>
+        <ul class="sidebar-nav" id="sidebar-nav"></ul>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Liens Rapides</div>
+        <ul class="sidebar-nav">
+          <li class="sidebar-nav-item" onclick="window.open('https://editor.weweb.io', '_blank')">🌐 Ouvrir WeWeb</li>
+          <li class="sidebar-nav-item" onclick="window.open('https://supabase.com/dashboard/project/jpmzlixxixwllfnhylrp', '_blank')">🗄️ Ouvrir Supabase</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <div class="content-phase">Phase 2 sur 10</div>
+        <h1 class="content-title">Dashboard & Navigation</h1>
+        <p class="content-subtitle">Crée un dashboard avec KPI dynamiques, une sidebar conditionnelle selon le profil, et les collections de données Supabase.</p>
+      </div>
+
+      <div id="steps-container">
+
+        <!-- ÉTAPE 1 -->
+        <article class="step open" data-step="1">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">1</div>
+              <div class="step-info">
+                <h3>Créer les collections Supabase</h3>
+                <p>Connecter les tables pour afficher les données</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="1"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Qu'est-ce qu'une Collection ?</div>
+              <div class="tip">
+                <span class="tip-icon">📚</span>
+                <div class="tip-content">Une <strong>Collection</strong> dans WeWeb = une requête vers Supabase qui récupère des données. Tu pourras ensuite utiliser ces données partout dans ton app.</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Créer la collection "vendeurs"</div>
+              <div class="path-block">
+                <div class="path-label">Chemin dans WeWeb</div>
+                <div class="path-steps">
+                  <span class="path-step">📊 Data</span>
+                  <span class="path-arrow">→</span>
+                  <span class="path-step">📦 Collections</span>
+                  <span class="path-arrow">→</span>
+                  <span class="path-step">➕ Add collection</span>
+                  <span class="path-arrow">→</span>
+                  <span class="path-step">Supabase</span>
+                </div>
+              </div>
+              <ol class="steps-list">
+                <li>Clique sur <strong>+ Add collection</strong></li>
+                <li>Choisis <strong>Supabase</strong> comme source</li>
+                <li>Sélectionne la table <strong>vendeurs</strong></li>
+                <li>Nomme la collection <strong>vendeurs</strong></li>
+                <li>Dans Filters, ajoute : <strong>agent_id = {{user.id}}</strong></li>
+                <li>Clique <strong>Create</strong></li>
+              </ol>
+              <div class="warning">
+                <span class="tip-icon">⚠️</span>
+                <div class="warning-content"><strong>Le filtre agent_id est crucial !</strong><br>Il fait que chaque agent ne voit QUE ses propres vendeurs (grâce au RLS de Supabase).</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Collections à créer</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Liste des collections</span></div>
+                <div class="code-content">vendeurs      → table: vendeurs, filter: agent_id = user.id
+acquereurs    → table: acquereurs, filter: agent_id = user.id
+biens         → table: biens, filter: agent_id = user.id
+estimations   → table: estimations, filter: agent_id = user.id
+visites       → table: visites, filter: agent_id = user.id
+ventes        → table: ventes, filter: agent_id = user.id
+taches        → table: taches, filter: agent_id = user.id</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 2 -->
+        <article class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">2</div>
+              <div class="step-info">
+                <h3>Enrichir la page Dashboard</h3>
+                <p>Ajouter les cartes KPI</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="2"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Aperçu du Dashboard</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Dashboard</span>
+                </div>
+                <div class="visual-preview-content" style="background: #0a0f1a;">
+                  <h2 style="font-size: 1.25rem; margin-bottom: 20px;">👋 Bonjour {{userProfile.prenom}} !</h2>
+                  <div class="kpi-grid">
+                    <div class="kpi-card">
+                      <div class="kpi-value">24</div>
+                      <div class="kpi-label">Vendeurs actifs</div>
+                    </div>
+                    <div class="kpi-card" style="--accent-primary: #22d3ee;">
+                      <div class="kpi-value" style="color: #22d3ee;">18</div>
+                      <div class="kpi-label">Acquéreurs</div>
+                    </div>
+                    <div class="kpi-card" style="--accent-primary: #10b981;">
+                      <div class="kpi-value" style="color: #10b981;">7</div>
+                      <div class="kpi-label">Biens en ligne</div>
+                    </div>
+                    <div class="kpi-card" style="--accent-primary: #f59e0b;">
+                      <div class="kpi-value" style="color: #f59e0b;">3</div>
+                      <div class="kpi-label">Ventes ce mois</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Créer les cartes KPI</div>
+              <ol class="steps-list">
+                <li>Ajoute un <strong>Container</strong> avec display Grid (4 colonnes)</li>
+                <li>Dans chaque cellule, ajoute une <strong>Div</strong> stylée (la carte KPI)</li>
+                <li>Ajoute un <strong>Text</strong> pour la valeur</li>
+                <li>Ajoute un <strong>Text</strong> pour le label</li>
+              </ol>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Formules pour les KPI</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Bindings des valeurs</span></div>
+                <div class="code-content">// Vendeurs actifs (statut != 'archive' et != 'perdu')
+{{vendeurs.data.filter(v => v.statut_vendeur !== 'archive' && v.statut_vendeur !== 'perdu').length}}
+
+// Acquéreurs actifs
+{{acquereurs.data.filter(a => a.statut_acquereur !== 'archive' && a.statut_acquereur !== 'perdu').length}}
+
+// Biens en ligne
+{{biens.data.filter(b => b.statut_bien === 'en_ligne').length}}
+
+// Ventes ce mois
+{{ventes.data.filter(v => {
+  const now = new Date();
+  const venteDate = new Date(v.date_signature_acte);
+  return venteDate.getMonth() === now.getMonth() && venteDate.getFullYear() === now.getFullYear();
+}).length}}</div>
+              </div>
+              <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content"><strong>Comment ajouter une formule :</strong><br>Sélectionne le Text → panneau droit → Content → clique sur ⚡ → Formula → colle le code</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 3 -->
+        <article class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">3</div>
+              <div class="step-info">
+                <h3>Ajouter les tâches urgentes</h3>
+                <p>Liste des tâches à faire dans les 7 jours</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="3"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Section Tâches Urgentes</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Tâches urgentes</span>
+                </div>
+                <div class="visual-preview-content" style="background: #111827; border-radius: 12px;">
+                  <h3 style="font-size: 1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">🔔 Tâches urgentes <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem;">3</span></h3>
+                  <div style="background: rgba(15, 23, 42, 0.5); border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-size: 0.9rem;">Rappeler M. Dupont</div>
+                      <div style="font-size: 0.75rem; color: #64748b;">Vendeur • Demain</div>
+                    </div>
+                    <div style="color: #ef4444; font-size: 0.8rem;">⏰ J-1</div>
+                  </div>
+                  <div style="background: rgba(15, 23, 42, 0.5); border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-size: 0.9rem;">Visite 14 rue des Lilas</div>
+                      <div style="font-size: 0.75rem; color: #64748b;">Visite • Après-demain</div>
+                    </div>
+                    <div style="color: #f59e0b; font-size: 0.8rem;">⏰ J-2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Formule pour filtrer les tâches urgentes</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Filtre tâches ≤ 7 jours</span></div>
+                <div class="code-content">// Dans un Repeater, bind sur cette formule :
+{{taches.data.filter(t => {
+  if (!t.date_echeance || t.statut_tache === 'terminee') return false;
+  const echeance = new Date(t.date_echeance);
+  const now = new Date();
+  const diffDays = Math.ceil((echeance - now) / (1000 * 60 * 60 * 24));
+  return diffDays <= 7 && diffDays >= 0;
+}).sort((a, b) => new Date(a.date_echeance) - new Date(b.date_echeance))}}</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Créer le Repeater</div>
+              <ol class="steps-list">
+                <li>Ajoute un élément <strong>Repeater</strong> (ou List)</li>
+                <li>Lie-le à la formule ci-dessus</li>
+                <li>Dans le template du Repeater, ajoute le design d'une tâche</li>
+                <li>Utilise <strong>{{item.titre}}</strong>, <strong>{{item.date_echeance}}</strong>, etc.</li>
+              </ol>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 4 -->
+        <article class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">4</div>
+              <div class="step-info">
+                <h3>Ajouter les visites à venir</h3>
+                <p>Prochaines visites planifiées</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="4"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formule visites à venir</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Visites des 7 prochains jours</span></div>
+                <div class="code-content">{{visites.data.filter(v => {
+  const dateVisite = new Date(v.date_visite);
+  const now = new Date();
+  const diffDays = Math.ceil((dateVisite - now) / (1000 * 60 * 60 * 24));
+  return diffDays >= 0 && diffDays <= 7;
+}).sort((a, b) => new Date(a.date_visite) - new Date(b.date_visite)).slice(0, 5)}}</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Affichage</div>
+              <p style="color: var(--text-secondary); margin: 12px 0;">Même principe que les tâches : un Repeater avec le design d'une visite.</p>
+              <div class="input-preview">
+                <span class="input-preview-label">Champs à afficher</span>
+                <span class="input-preview-value">{{item.date_visite}} | {{item.heure_visite}} | Adresse du bien | Nom acquéreur</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 5 -->
+        <article class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">5</div>
+              <div class="step-info">
+                <h3>Calculer le CA mensuel</h3>
+                <p>Chiffre d'affaires du mois en cours</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="5"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formule CA mensuel</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Calcul du CA</span></div>
+                <div class="code-content">// CA = somme des honoraires des ventes du mois
+{{ventes.data.filter(v => {
+  const now = new Date();
+  const venteDate = new Date(v.date_signature_acte);
+  return venteDate.getMonth() === now.getMonth() && 
+         venteDate.getFullYear() === now.getFullYear();
+}).reduce((sum, v) => sum + (v.honoraires_agent || 0), 0)}}</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Formater en euros</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Formatage monétaire</span></div>
+                <div class="code-content">// Ajoute .toLocaleString() pour formater
+{{ventes.data.filter(v => {
+  const now = new Date();
+  const venteDate = new Date(v.date_signature_acte);
+  return venteDate.getMonth() === now.getMonth() && 
+         venteDate.getFullYear() === now.getFullYear();
+}).reduce((sum, v) => sum + (v.honoraires_agent || 0), 0).toLocaleString('fr-FR')}} €</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 6 -->
+        <article class="step" data-step="6">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">6</div>
+              <div class="step-info">
+                <h3>Sidebar conditionnelle par profil</h3>
+                <p>Afficher/masquer les liens selon le profil</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="6"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Rappel des profils</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">profil_id dans table agents</span></div>
+                <div class="code-content">1 = Mandataire (base)
+2 = Marchand de Biens (MDB)
+3 = Coach</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Conditions d'affichage</div>
+              <div class="path-block">
+                <div class="path-label">Comment conditionner un élément</div>
+                <div class="path-steps">
+                  <span class="path-step">Sélectionne l'élément</span>
+                  <span class="path-arrow">→</span>
+                  <span class="path-step">Panneau droit → Settings</span>
+                  <span class="path-arrow">→</span>
+                  <span class="path-step">Conditional rendering</span>
+                </div>
+              </div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Conditions pour chaque lien</span></div>
+                <div class="code-content">// Lien "Projets MDB" - visible si profil MDB
+{{userProfile.profil_id === 2}}
+
+// Lien "Coaching" - visible si profil Coach
+{{userProfile.profil_id === 3}}
+
+// Liens communs (Dashboard, Vendeurs, etc.) - toujours visibles
+true</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content">Tu peux aussi utiliser <strong>{{userProfile.profil_id >= 2}}</strong> pour afficher aux profils MDB ET Coach.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 7 -->
+        <article class="step" data-step="7">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">7</div>
+              <div class="step-info">
+                <h3>Améliorer le header du layout</h3>
+                <p>Titre de page dynamique + bouton action</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="7"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Titre dynamique selon la page</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Formule pour le titre</span></div>
+                <div class="code-content">// Utilise une condition selon page.path
+{{page.path === '/dashboard' ? 'Dashboard' :
+  page.path === '/vendeurs' ? 'Vendeurs' :
+  page.path === '/acquereurs' ? 'Acquéreurs' :
+  page.path === '/pipeline' ? 'Pipeline' :
+  page.path === '/biens' ? 'Biens' :
+  page.path === '/planning' ? 'Planning' :
+  'SuPrealty'}}</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Bouton d'action rapide</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Header avec action</span>
+                </div>
+                <div class="visual-preview-content" style="background: #111827; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;">
+                  <h2 style="font-size: 1.25rem; font-weight: 700;">Vendeurs</h2>
+                  <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer;">+ Nouveau vendeur</div>
+                </div>
+              </div>
+              <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content">Le bouton d'action change selon la page. On le configurera dans chaque phase (vendeurs, acquéreurs, etc.)</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 8 -->
+        <article class="step" data-step="8">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">8</div>
+              <div class="step-info">
+                <h3>Ajouter le profil utilisateur</h3>
+                <p>Avatar et nom dans la sidebar</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="8"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Section profil en bas de sidebar</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Profil utilisateur</span>
+                </div>
+                <div class="visual-preview-content" style="background: #111827; padding: 16px;">
+                  <div style="background: #1e293b; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white;">JD</div>
+                    <div style="flex: 1;">
+                      <div style="font-size: 0.9rem; font-weight: 600;">Jean Dupont</div>
+                      <div style="font-size: 0.75rem; color: #64748b;">Mandataire</div>
+                    </div>
+                    <div style="color: #64748b; cursor: pointer;">⚙️</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Bindings</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Données à afficher</span></div>
+                <div class="code-content">// Initiales pour l'avatar
+{{(userProfile.prenom || '').charAt(0)}}{{(userProfile.nom || '').charAt(0)}}
+
+// Nom complet
+{{userProfile.prenom}} {{userProfile.nom}}
+
+// Type de profil
+{{userProfile.profil_id === 1 ? 'Mandataire' : 
+  userProfile.profil_id === 2 ? 'Marchand de Biens' : 
+  userProfile.profil_id === 3 ? 'Coach' : 'Agent'}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 9 -->
+        <article class="step" data-step="9">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">9</div>
+              <div class="step-info">
+                <h3>Créer les pages vides</h3>
+                <p>Préparer les pages pour les prochaines phases</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="9"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Pages à créer</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Liste des pages</span></div>
+                <div class="code-content">Vendeurs       → /vendeurs       → Layout: MainLayout
+Acquéreurs     → /acquereurs     → Layout: MainLayout
+Pipeline       → /pipeline       → Layout: MainLayout
+Biens          → /biens          → Layout: MainLayout
+Estimations    → /estimations    → Layout: MainLayout
+Planning       → /planning       → Layout: MainLayout
+Coaching       → /coaching       → Layout: MainLayout (conditionnel)
+MDB            → /mdb            → Layout: MainLayout (conditionnel)</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content">Pour l'instant, mets juste un titre sur chaque page. On les enrichira dans les phases suivantes.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 10 -->
+        <article class="step" data-step="10">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">10</div>
+              <div class="step-info">
+                <h3>Ajouter les notifications</h3>
+                <p>Icône cloche avec badge</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="10"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Badge de notifications</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Nombre de tâches urgentes</span></div>
+                <div class="code-content">// Pour le badge
+{{taches.data.filter(t => {
+  if (!t.date_echeance || t.statut_tache === 'terminee') return false;
+  const echeance = new Date(t.date_echeance);
+  const now = new Date();
+  const diffDays = Math.ceil((echeance - now) / (1000 * 60 * 60 * 24));
+  return diffDays <= 3 && diffDays >= 0;
+}).length}}</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Afficher/masquer le badge</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Condition d'affichage</span></div>
+                <div class="code-content">// Afficher uniquement si > 0
+{{taches.data.filter(t => ...).length > 0}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 11 -->
+        <article class="step" data-step="11">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">11</div>
+              <div class="step-info">
+                <h3>Responsive mobile</h3>
+                <p>Adapter le dashboard aux petits écrans</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="11"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Breakpoints WeWeb</div>
+              <div class="path-block">
+                <div class="path-label">Où configurer le responsive</div>
+                <div class="path-steps">
+                  <span class="path-step">🖥️ Icône écran (haut de l'éditeur)</span>
+                  <span class="path-arrow">→</span>
+                  <span class="path-step">Choisis Mobile ou Tablet</span>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Ajustements à faire</div>
+              <ol class="steps-list">
+                <li><strong>Sidebar</strong> : masquer sur mobile, ajouter un menu hamburger</li>
+                <li><strong>KPI Grid</strong> : passer de 4 à 2 colonnes</li>
+                <li><strong>Tâches/Visites</strong> : stack vertical</li>
+                <li><strong>Header</strong> : réduire le padding</li>
+              </ol>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 12 -->
+        <article class="step" data-step="12">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">12</div>
+              <div class="step-info">
+                <h3>Tester le dashboard complet</h3>
+                <p>Vérifier que tout fonctionne</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="12"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Checklist de test</div>
+              <ul style="list-style: none; margin: 16px 0;">
+                <li style="padding: 8px 0;">○ Les KPI affichent les bonnes valeurs</li>
+                <li style="padding: 8px 0;">○ Les tâches urgentes sont filtrées correctement</li>
+                <li style="padding: 8px 0;">○ Les visites à venir s'affichent</li>
+                <li style="padding: 8px 0;">○ Le CA du mois est calculé</li>
+                <li style="padding: 8px 0;">○ La sidebar affiche les bons liens selon le profil</li>
+                <li style="padding: 8px 0;">○ Le nom de l'utilisateur s'affiche</li>
+                <li style="padding: 8px 0;">○ La navigation fonctionne entre les pages</li>
+                <li style="padding: 8px 0;">○ Le responsive est correct sur mobile</li>
+              </ul>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">🎉</span>
+              <div class="tip-content"><strong>Phase 2 terminée !</strong><br>Tu as maintenant un dashboard fonctionnel avec données en temps réel. Prochaine étape : le CRM Vendeurs !</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Navigation -->
+      <nav class="page-nav">
+        <a href="phase1-auth-layout.html" class="page-nav-btn">
+          <span>←</span>
+          <div>
+            <div class="page-nav-label">Précédent</div>
+            <div class="page-nav-title">Phase 1 - Auth</div>
+          </div>
+        </a>
+        <a href="phase3-vendeurs.html" class="page-nav-btn">
+          <div style="text-align: right;">
+            <div class="page-nav-label">Suivant</div>
+            <div class="page-nav-title">Phase 3 - Vendeurs</div>
+          </div>
+          <span>→</span>
+        </a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'suprealty_progress';
+    const PHASE_ID = 'phase2';
+    const TOTAL_STEPS = 12;
+
+    function loadProgress() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveProgress(progress) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function updateUI() {
+      const progress = loadProgress();
+      const phaseProgress = progress[PHASE_ID] || { completed: 0, steps: {} };
+      const completedCount = Object.values(phaseProgress.steps || {}).filter(Boolean).length;
+      
+      document.getElementById('progress-text').textContent = completedCount + '/' + TOTAL_STEPS + ' étapes';
+      document.getElementById('progress-fill').style.width = (completedCount / TOTAL_STEPS * 100) + '%';
+
+      document.querySelectorAll('.step').forEach(step => {
+        const stepNum = step.dataset.step;
+        const isCompleted = phaseProgress.steps && phaseProgress.steps[stepNum];
+        const checkbox = step.querySelector('.step-checkbox');
+        if (isCompleted) { step.classList.add('completed'); checkbox && checkbox.classList.add('checked'); }
+        else { step.classList.remove('completed'); checkbox && checkbox.classList.remove('checked'); }
+      });
+
+      updateSidebar(phaseProgress);
+    }
+
+    function updateSidebar(phaseProgress) {
+      const nav = document.getElementById('sidebar-nav');
+      nav.innerHTML = '';
+      for (let i = 1; i <= TOTAL_STEPS; i++) {
+        const step = document.querySelector('.step[data-step="' + i + '"]');
+        const title = step ? step.querySelector('.step-info h3').textContent : 'Étape ' + i;
+        const isCompleted = phaseProgress.steps && phaseProgress.steps[i];
+        const li = document.createElement('li');
+        li.className = 'sidebar-nav-item' + (isCompleted ? ' completed' : '');
+        li.innerHTML = '<span class="sidebar-nav-number">' + i + '</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + title + '</span>';
+        li.onclick = function() { document.querySelector('.step[data-step="' + i + '"]').scrollIntoView({ behavior: 'smooth' }); };
+        nav.appendChild(li);
+      }
+    }
+
+    function toggleStep(stepElement) {
+      document.querySelectorAll('.step.open').forEach(s => { if (s !== stepElement) s.classList.remove('open'); });
+      stepElement.classList.toggle('open');
+    }
+
+    function toggleCheckbox(stepNum) {
+      const progress = loadProgress();
+      if (!progress[PHASE_ID]) progress[PHASE_ID] = { completed: 0, steps: {} };
+      progress[PHASE_ID].steps[stepNum] = !progress[PHASE_ID].steps[stepNum];
+      progress[PHASE_ID].completed = Object.values(progress[PHASE_ID].steps).filter(Boolean).length;
+      saveProgress(progress);
+      updateUI();
+    }
+
+    document.querySelectorAll('.step-header').forEach(header => {
+      header.addEventListener('click', function(e) {
+        if (e.target.closest('.step-checkbox')) return;
+        toggleStep(header.closest('.step'));
+      });
+    });
+
+    document.querySelectorAll('.step-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleCheckbox(checkbox.dataset.step);
+      });
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>

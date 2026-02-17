@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 7 - Planning & Tâches | SuPrealty Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg-dark:#0a0f1a;--bg-card:#111827;--bg-code:#0d1117;--accent-primary:#6366f1;--accent-secondary:#22d3ee;--accent-success:#10b981;--accent-warning:#f59e0b;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:#1e293b;--gradient-primary:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#d946ef 100%);--radius:16px}
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;line-height:1.6}
+    .header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}.header-left{display:flex;align-items:center;gap:16px}.back-btn{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--accent-primary);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem}.header-title{font-size:1.25rem;font-weight:700}.header-title span{color:var(--text-muted);font-weight:400}.header-progress{display:flex;align-items:center;gap:12px}.header-progress-text{font-size:0.9rem;color:var(--text-secondary)}.header-progress-bar{width:200px;height:8px;background:var(--border);border-radius:999px;overflow:hidden}.header-progress-fill{height:100%;background:linear-gradient(135deg,#10b981,#22d3ee);transition:width 0.3s}
+    .main-layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 65px)}@media(max-width:1024px){.main-layout{grid-template-columns:1fr}.sidebar{display:none}}
+    .sidebar{background:var(--bg-card);border-right:1px solid var(--border);padding:24px;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto}.sidebar-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px}.sidebar-nav{list-style:none}.sidebar-nav-item{padding:10px 12px;border-radius:8px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--text-secondary)}.sidebar-nav-item:hover{background:rgba(99,102,241,0.1)}.sidebar-nav-item.completed{color:var(--accent-success)}.sidebar-nav-number{width:24px;height:24px;background:var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600}.sidebar-nav-item.completed .sidebar-nav-number{background:rgba(16,185,129,0.2);color:var(--accent-success)}
+    .content{padding:32px;max-width:900px}.content-header{margin-bottom:32px}.content-phase{display:inline-block;background:var(--gradient-primary);color:white;padding:4px 12px;border-radius:999px;font-size:0.8rem;font-weight:600;margin-bottom:12px}.content-title{font-size:2rem;font-weight:800;margin-bottom:8px}.content-subtitle{font-size:1.1rem;color:var(--text-secondary)}
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}.step.completed{border-color:rgba(16,185,129,0.3)}.step.open{border-color:rgba(99,102,241,0.3)}.step-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}.step-header:hover{background:rgba(99,102,241,0.05)}.step-header-left{display:flex;align-items:center;gap:16px}.step-number{width:40px;height:40px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-primary)}.step.completed .step-number{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(34,211,238,0.1));border-color:rgba(16,185,129,0.3);color:var(--accent-success)}.step-info h3{font-size:1rem;font-weight:600;margin-bottom:4px}.step-info p{font-size:0.85rem;color:var(--text-muted)}.step-header-right{display:flex;align-items:center;gap:12px}.step-duration{font-size:0.8rem;color:var(--text-muted);background:var(--border);padding:4px 10px;border-radius:999px}.step-checkbox{width:24px;height:24px;border:2px solid #334155;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}.step-checkbox.checked{background:var(--accent-success);border-color:var(--accent-success)}.step-checkbox.checked::after{content:'✓';color:white;font-weight:700}.step-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.3s}.step.open .step-toggle{transform:rotate(180deg)}.step-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}.step.open .step-body{display:block}
+    .instruction{margin-top:20px}.instruction-title{font-size:0.9rem;font-weight:600;color:var(--accent-secondary);margin-bottom:12px;display:flex;align-items:center;gap:8px}.instruction-title::before{content:'';width:4px;height:16px;background:var(--accent-secondary);border-radius:2px}
+    .tip{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(34,211,238,0.05));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 20px;margin:16px 0;display:flex;gap:12px}.tip-icon{font-size:1.25rem}.tip-content{font-size:0.9rem;color:var(--text-secondary)}.tip-content strong{color:var(--accent-success)}
+    .code-block{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}.code-header{background:var(--border);padding:10px 16px}.code-label{font-size:0.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace}.code-content{padding:16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.7;color:#e2e8f0;white-space:pre-wrap}
+    .page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);gap:16px;flex-wrap:wrap}.page-nav-btn{display:flex;align-items:center;gap:12px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text-primary)}.page-nav-btn:hover{border-color:var(--accent-primary)}.page-nav-label{font-size:0.8rem;color:var(--text-muted)}.page-nav-title{font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 7 <span>/ Planning & Tâches</span></div>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/10 étapes</span>
+      <div class="header-progress-bar"><div class="header-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Étapes Phase 7</div>
+      <ul class="sidebar-nav" id="sidebar-nav"></ul>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <div class="content-phase">Phase 7 sur 10</div>
+        <h1 class="content-title">Planning & Tâches</h1>
+        <p class="content-subtitle">Organise ton activité avec un gestionnaire de tâches et un planning intégré.</p>
+      </div>
+
+      <div id="steps-container">
+
+        <article class="step open" data-step="1">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">1</div>
+              <div class="step-info"><h3>Page Tâches</h3><p>Liste des tâches à faire</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="1"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Structure de la page</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Layout</span></div>
+                <div class="code-content">// Filtres
+- Toutes | À faire | En cours | Terminées
+- Par type : rappel, rdv, admin, prospection
+- Par priorité : haute, moyenne, basse
+
+// Liste des tâches
+- Checkbox pour marquer comme fait
+- Titre + description
+- Date échéance avec badge J-X
+- Lien vers vendeur/acquéreur si applicable</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">2</div>
+              <div class="step-info"><h3>Créer une tâche</h3><p>Formulaire de création</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="2"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Champs du formulaire</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Insert tâche</span></div>
+                <div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "titre": "{{formTitre}}",
+  "description": "{{formDescription}}",
+  "type_tache": "{{formType}}", // rappel, rdv, admin, prospection
+  "priorite": "{{formPriorite}}", // haute, moyenne, basse
+  "date_echeance": "{{formDateEcheance}}",
+  "heure_echeance": "{{formHeureEcheance}}",
+  "vendeur_id": "{{formVendeurId || null}}",
+  "acquereur_id": "{{formAcquereurId || null}}",
+  "bien_id": "{{formBienId || null}}",
+  "statut_tache": "a_faire"
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">3</div>
+              <div class="step-info"><h3>Marquer comme fait</h3><p>Workflow de complétion</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="3"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Toggle statut</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Update</span></div>
+                <div class="code-content">// Au clic sur la checkbox
+Action: Supabase Update
+Table: taches
+Filter: id = {{tacheId}}
+Data: {
+  "statut_tache": {{item.statut_tache === 'terminee' ? 'a_faire' : 'terminee'}},
+  "date_completion": {{item.statut_tache === 'terminee' ? null : new Date().toISOString()}}
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">4</div>
+              <div class="step-info"><h3>Tâches urgentes</h3><p>Badge et tri par urgence</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="4"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Calcul J-X</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Badge urgence</span></div>
+                <div class="code-content">// Jours restants
+{{Math.ceil((new Date(item.date_echeance) - new Date()) / (1000 * 60 * 60 * 24))}}
+
+// Couleur du badge
+{{daysLeft <= 0 ? '#ef4444' :   // Rouge - En retard
+  daysLeft <= 1 ? '#f59e0b' :   // Orange - Demain
+  daysLeft <= 3 ? '#22d3ee' :   // Cyan - Cette semaine
+  '#64748b'}}                    // Gris - Plus tard
+
+// Texte
+{{daysLeft < 0 ? 'En retard' :
+  daysLeft === 0 ? "Aujourd'hui" :
+  daysLeft === 1 ? 'Demain' :
+  'J-' + daysLeft}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">5</div>
+              <div class="step-info"><h3>Tâches récurrentes</h3><p>Créer des tâches automatiques</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="5"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Option simple</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Recréer à la complétion</span></div>
+                <div class="code-content">// Quand une tâche récurrente est terminée
+if (item.est_recurrente && item.frequence) {
+  // Calculer prochaine date
+  const nextDate = addDays(new Date(), item.frequence_jours);
+  
+  // Créer nouvelle tâche
+  INSERT INTO taches (
+    ...sameFields,
+    date_echeance: nextDate,
+    statut_tache: 'a_faire'
+  )
+}</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content"><strong>Alternative :</strong> Utiliser une Edge Function Supabase ou un cron job externe pour créer les tâches récurrentes.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="6">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">6</div>
+              <div class="step-info"><h3>Vue Planning</h3><p>Calendrier semaine/mois</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~25 min</span>
+              <div class="step-checkbox" data-step="6"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Vue semaine simplifiée</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Grid 7 colonnes</span></div>
+                <div class="code-content">// Structure
+<div class="week-grid">
+  {{weekDays.map(day => (
+    <div class="day-column">
+      <div class="day-header">{{day.name}} {{day.date}}</div>
+      <div class="day-events">
+        {{getTachesForDay(day.date).map(tache => (
+          <div class="event-card">{{tache.titre}}</div>
+        ))}
+        {{getVisitesForDay(day.date).map(visite => (
+          <div class="event-card visite">{{visite.heure}} - Visite</div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="7">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">7</div>
+              <div class="step-info"><h3>Navigation temporelle</h3><p>Semaine précédente/suivante</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="7"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Variable currentWeekStart</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Navigation</span></div>
+                <div class="code-content">// Variable
+currentWeekStart: Date (initialisé au lundi de cette semaine)
+
+// Bouton précédent
+currentWeekStart = addDays(currentWeekStart, -7)
+
+// Bouton suivant
+currentWeekStart = addDays(currentWeekStart, 7)
+
+// Bouton Aujourd'hui
+currentWeekStart = getMonday(new Date())</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="8">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">8</div>
+              <div class="step-info"><h3>Drag & Drop planning</h3><p>Déplacer des événements</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="8"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Option simple</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Au clic sur un événement, ouvre une modal pour modifier la date/heure plutôt que d'implémenter un vrai drag & drop.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="9">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">9</div>
+              <div class="step-info"><h3>Notifications</h3><p>Rappels des tâches</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="9"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Badge dans le header</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Compteur notifications</span></div>
+                <div class="code-content">// Tâches urgentes (≤ 3 jours)
+{{taches.data.filter(t => {
+  if (t.statut_tache === 'terminee') return false;
+  const days = Math.ceil((new Date(t.date_echeance) - new Date()) / (1000*60*60*24));
+  return days <= 3;
+}).length}}</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content"><strong>Notifications push :</strong> Nécessite une PWA ou un service externe. À ajouter en V2.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="10">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">10</div>
+              <div class="step-info"><h3>Tester le planning</h3><p>Validation</p></div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="10"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Checklist</div>
+              <ul style="list-style:none;margin:16px 0;">
+                <li style="padding:8px 0;">○ Créer une tâche</li>
+                <li style="padding:8px 0;">○ Marquer comme fait</li>
+                <li style="padding:8px 0;">○ Les badges J-X fonctionnent</li>
+                <li style="padding:8px 0;">○ La vue planning affiche les événements</li>
+                <li style="padding:8px 0;">○ Navigation semaine précédente/suivante</li>
+              </ul>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">🎉</span>
+              <div class="tip-content"><strong>Phase 7 terminée !</strong></div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <nav class="page-nav">
+        <a href="phase6-biens.html" class="page-nav-btn"><span>←</span><div><div class="page-nav-label">Précédent</div><div class="page-nav-title">Phase 6 - Biens</div></div></a>
+        <a href="phase8-coaching.html" class="page-nav-btn"><div style="text-align:right;"><div class="page-nav-label">Suivant</div><div class="page-nav-title">Phase 8 - Coaching</div></div><span>→</span></a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY='suprealty_progress',PHASE_ID='phase7',TOTAL_STEPS=10;
+    function loadProgress(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return{}}}
+    function saveProgress(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
+    function updateUI(){const progress=loadProgress(),pp=progress[PHASE_ID]||{steps:{}},cc=Object.values(pp.steps||{}).filter(Boolean).length;document.getElementById('progress-text').textContent=cc+'/'+TOTAL_STEPS+' étapes';document.getElementById('progress-fill').style.width=(cc/TOTAL_STEPS*100)+'%';document.querySelectorAll('.step').forEach(s=>{const n=s.dataset.step,done=pp.steps&&pp.steps[n],cb=s.querySelector('.step-checkbox');if(done){s.classList.add('completed');cb&&cb.classList.add('checked')}else{s.classList.remove('completed');cb&&cb.classList.remove('checked')}});updateSidebar(pp)}
+    function updateSidebar(pp){const nav=document.getElementById('sidebar-nav');nav.innerHTML='';for(let i=1;i<=TOTAL_STEPS;i++){const s=document.querySelector('.step[data-step="'+i+'"]'),t=s?s.querySelector('.step-info h3').textContent:'Étape '+i,done=pp.steps&&pp.steps[i],li=document.createElement('li');li.className='sidebar-nav-item'+(done?' completed':'');li.innerHTML='<span class="sidebar-nav-number">'+i+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+t+'</span>';li.onclick=()=>document.querySelector('.step[data-step="'+i+'"]').scrollIntoView({behavior:'smooth'});nav.appendChild(li)}}
+    function toggleStep(el){document.querySelectorAll('.step.open').forEach(s=>{if(s!==el)s.classList.remove('open')});el.classList.toggle('open')}
+    function toggleCheckbox(n){const p=loadProgress();if(!p[PHASE_ID])p[PHASE_ID]={steps:{}};p[PHASE_ID].steps[n]=!p[PHASE_ID].steps[n];saveProgress(p);updateUI()}
+    document.querySelectorAll('.step-header').forEach(h=>h.addEventListener('click',e=>{if(e.target.closest('.step-checkbox'))return;toggleStep(h.closest('.step'))}));
+    document.querySelectorAll('.step-checkbox').forEach(c=>c.addEventListener('click',e=>{e.stopPropagation();toggleCheckbox(c.dataset.step)}));
+    updateUI();
+  </script>
+</body>
+</html>

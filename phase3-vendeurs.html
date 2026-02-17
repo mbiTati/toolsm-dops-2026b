@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 3 - CRM Vendeurs & Scoring B1-B5 | SuPrealty Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg-dark:#0a0f1a;--bg-card:#111827;--bg-card-hover:#1a2235;--bg-code:#0d1117;--accent-primary:#6366f1;--accent-secondary:#22d3ee;--accent-success:#10b981;--accent-warning:#f59e0b;--accent-danger:#ef4444;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:#1e293b;--border-light:#334155;--gradient-primary:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#d946ef 100%);--gradient-success:linear-gradient(135deg,#10b981 0%,#22d3ee 100%);--radius:16px;--radius-sm:8px}
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;line-height:1.6}
+    .header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .header-left{display:flex;align-items:center;gap:16px}.back-btn{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--accent-primary);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:500}.back-btn:hover{background:rgba(99,102,241,0.2)}
+    .header-title{font-size:1.25rem;font-weight:700}.header-title span{color:var(--text-muted);font-weight:400}
+    .header-progress{display:flex;align-items:center;gap:12px}.header-progress-text{font-size:0.9rem;color:var(--text-secondary)}.header-progress-bar{width:200px;height:8px;background:var(--border);border-radius:999px;overflow:hidden}.header-progress-fill{height:100%;background:var(--gradient-success);border-radius:999px;transition:width 0.3s}
+    .main-layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 65px)}@media(max-width:1024px){.main-layout{grid-template-columns:1fr}.sidebar{display:none}}
+    .sidebar{background:var(--bg-card);border-right:1px solid var(--border);padding:24px;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto}
+    .sidebar-section{margin-bottom:24px}.sidebar-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px}
+    .sidebar-nav{list-style:none}.sidebar-nav-item{padding:10px 12px;border-radius:8px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--text-secondary);transition:all 0.2s}.sidebar-nav-item:hover{background:rgba(99,102,241,0.1);color:var(--text-primary)}.sidebar-nav-item.completed{color:var(--accent-success)}
+    .sidebar-nav-number{width:24px;height:24px;background:var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0}.sidebar-nav-item.completed .sidebar-nav-number{background:rgba(16,185,129,0.2);color:var(--accent-success)}
+    .content{padding:32px;max-width:900px}.content-header{margin-bottom:32px}.content-phase{display:inline-block;background:var(--gradient-primary);color:white;padding:4px 12px;border-radius:999px;font-size:0.8rem;font-weight:600;margin-bottom:12px}.content-title{font-size:2rem;font-weight:800;margin-bottom:8px}.content-subtitle{font-size:1.1rem;color:var(--text-secondary)}
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;transition:all 0.3s}.step.completed{border-color:rgba(16,185,129,0.3)}.step.open{border-color:rgba(99,102,241,0.3)}
+    .step-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}.step-header:hover{background:rgba(99,102,241,0.05)}
+    .step-header-left{display:flex;align-items:center;gap:16px}.step-number{width:40px;height:40px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-primary);flex-shrink:0}.step.completed .step-number{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(34,211,238,0.1));border-color:rgba(16,185,129,0.3);color:var(--accent-success)}
+    .step-info h3{font-size:1rem;font-weight:600;margin-bottom:4px}.step-info p{font-size:0.85rem;color:var(--text-muted)}
+    .step-header-right{display:flex;align-items:center;gap:12px}.step-duration{font-size:0.8rem;color:var(--text-muted);background:var(--border);padding:4px 10px;border-radius:999px}
+    .step-checkbox{width:24px;height:24px;border:2px solid var(--border-light);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}.step-checkbox:hover{border-color:var(--accent-primary)}.step-checkbox.checked{background:var(--accent-success);border-color:var(--accent-success)}.step-checkbox.checked::after{content:'✓';color:white;font-weight:700;font-size:14px}
+    .step-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.3s}.step.open .step-toggle{transform:rotate(180deg)}
+    .step-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}.step.open .step-body{display:block}
+    .instruction{margin-top:20px}.instruction-title{font-size:0.9rem;font-weight:600;color:var(--accent-secondary);margin-bottom:12px;display:flex;align-items:center;gap:8px}.instruction-title::before{content:'';width:4px;height:16px;background:var(--accent-secondary);border-radius:2px}
+    .path-block{background:linear-gradient(135deg,rgba(34,211,238,0.1),rgba(99,102,241,0.05));border:1px solid rgba(34,211,238,0.2);border-radius:12px;padding:16px 20px;margin:12px 0}.path-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent-secondary);margin-bottom:8px}.path-steps{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.path-step{background:rgba(34,211,238,0.15);border:1px solid rgba(34,211,238,0.3);padding:6px 12px;border-radius:6px;font-size:0.85rem;font-weight:500;color:var(--text-primary)}.path-arrow{color:var(--text-muted);font-size:1.2rem}
+    .steps-list{list-style:none;margin:12px 0;counter-reset:step-counter}.steps-list li{padding:12px 16px;background:rgba(15,23,42,0.5);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;font-size:0.9rem}.steps-list li::before{content:counter(step-counter);counter-increment:step-counter;background:var(--accent-primary);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;flex-shrink:0}
+    .tip{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(34,211,238,0.05));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 20px;margin:16px 0;display:flex;gap:12px}.tip-icon{font-size:1.25rem;flex-shrink:0}.tip-content{font-size:0.9rem;color:var(--text-secondary)}.tip-content strong{color:var(--accent-success)}
+    .warning{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.05));border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:16px 20px;margin:16px 0;display:flex;gap:12px}.warning-content{font-size:0.9rem;color:var(--text-secondary)}.warning-content strong{color:var(--accent-warning)}
+    .input-preview{background:rgba(15,23,42,0.5);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:8px 0}.input-preview-label{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px}.input-preview-value{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--accent-secondary)}
+    .visual-preview{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:16px 0;overflow:hidden}.visual-preview-header{background:var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px}.visual-preview-dot{width:12px;height:12px;border-radius:50%}.visual-preview-dot.red{background:#ef4444}.visual-preview-dot.yellow{background:#f59e0b}.visual-preview-dot.green{background:#10b981}.visual-preview-title{margin-left:auto;font-size:0.8rem;color:var(--text-muted)}.visual-preview-content{padding:24px}
+    .code-block{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}.code-header{background:var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}.code-label{font-size:0.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace}.code-content{padding:16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.7;overflow-x:auto;color:#e2e8f0;white-space:pre-wrap}
+    .scoring-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}.scoring-card{background:rgba(15,23,42,0.5);border:2px solid var(--border);border-radius:12px;padding:16px;text-align:center;transition:all 0.2s}.scoring-card.b1{border-color:#10b981;background:rgba(16,185,129,0.1)}.scoring-card.b2{border-color:#22d3ee;background:rgba(34,211,238,0.1)}.scoring-card.b3{border-color:#f59e0b;background:rgba(245,158,11,0.1)}.scoring-card.b4{border-color:#f97316;background:rgba(249,115,22,0.1)}.scoring-card.b5{border-color:#ef4444;background:rgba(239,68,68,0.1)}
+    .scoring-card .score{font-size:1.5rem;font-weight:800}.scoring-card.b1 .score{color:#10b981}.scoring-card.b2 .score{color:#22d3ee}.scoring-card.b3 .score{color:#f59e0b}.scoring-card.b4 .score{color:#f97316}.scoring-card.b5 .score{color:#ef4444}
+    .scoring-card .label{font-size:0.75rem;color:var(--text-muted);margin-top:4px}
+    .workflow-step{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}.workflow-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}.workflow-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;color:white}.workflow-num.primary{background:var(--accent-primary)}.workflow-num.success{background:var(--accent-success)}.workflow-num.warning{background:var(--accent-warning)}
+    .page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);gap:16px;flex-wrap:wrap}.page-nav-btn{display:flex;align-items:center;gap:12px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text-primary);transition:all 0.2s}.page-nav-btn:hover{background:var(--bg-card-hover);border-color:var(--accent-primary)}.page-nav-label{font-size:0.8rem;color:var(--text-muted)}.page-nav-title{font-weight:600}
+    @media(max-width:768px){.content{padding:20px}.content-title{font-size:1.5rem}.scoring-grid{grid-template-columns:repeat(3,1fr)}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 3 <span>/ CRM Vendeurs & Scoring</span></div>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/18 étapes</span>
+      <div class="header-progress-bar"><div class="header-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Étapes Phase 3</div>
+        <ul class="sidebar-nav" id="sidebar-nav"></ul>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <div class="content-phase">Phase 3 sur 10</div>
+        <h1 class="content-title">CRM Vendeurs & Scoring B1-B5</h1>
+        <p class="content-subtitle">Crée le module vendeurs avec le système de ciblage drastique B1-B5, les filtres avancés, et les formulaires de création/édition.</p>
+      </div>
+
+      <div id="steps-container">
+
+        <!-- ÉTAPE 1 : Comprendre le scoring -->
+        <article class="step open" data-step="1">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">1</div>
+              <div class="step-info">
+                <h3>Comprendre le scoring B1-B5</h3>
+                <p>La méthode du ciblage drastique</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~5 min</span>
+              <div class="step-checkbox" data-step="1"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Le principe du ciblage drastique</div>
+              <div class="tip">
+                <span class="tip-icon">🎯</span>
+                <div class="tip-content"><strong>Le scoring B1-B5</strong> permet de prioriser tes vendeurs selon leur probabilité de signer un mandat. Tu concentres ton énergie sur les B1 (chauds) plutôt que de perdre du temps avec les B5 (froids).</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Les 5 niveaux</div>
+              <div class="scoring-grid">
+                <div class="scoring-card b1"><div class="score">B1</div><div class="label">Très chaud</div></div>
+                <div class="scoring-card b2"><div class="score">B2</div><div class="label">Chaud</div></div>
+                <div class="scoring-card b3"><div class="score">B3</div><div class="label">Tiède</div></div>
+                <div class="scoring-card b4"><div class="score">B4</div><div class="label">Froid</div></div>
+                <div class="scoring-card b5"><div class="score">B5</div><div class="label">Très froid</div></div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Critères de scoring</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Grille de points</span></div>
+                <div class="code-content">MOTIVATION (sur 30 points)
+├─ Vente urgente (divorce, succession, mutation)  → +30
+├─ Projet défini avec délai < 3 mois              → +20
+├─ Projet vague, "on verra"                       → +5
+└─ Curieux, pas de projet réel                    → +0
+
+PRIX (sur 25 points)
+├─ Prix aligné sur le marché                      → +25
+├─ Prix légèrement au-dessus (+5-10%)             → +15
+├─ Prix élevé mais négociable                     → +10
+└─ Prix délirant, non négociable                  → +0
+
+EXCLUSIVITÉ (sur 25 points)
+├─ Accepte l'exclusivité                          → +25
+├─ Ouvert à discussion                            → +15
+├─ Mandat simple uniquement                       → +5
+└─ Déjà en multi-agences                          → +0
+
+DISPONIBILITÉ (sur 20 points)
+├─ Disponible, répond vite                        → +20
+├─ Disponible avec contraintes                    → +10
+├─ Difficile à joindre                            → +5
+└─ Injoignable                                    → +0
+
+TOTAL : /100 points
+B1 = 80-100 | B2 = 60-79 | B3 = 40-59 | B4 = 20-39 | B5 = 0-19</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 2 : Page liste vendeurs -->
+        <article class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">2</div>
+              <div class="step-info">
+                <h3>Créer la page liste Vendeurs</h3>
+                <p>Tableau avec tous les vendeurs</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="2"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Structure de la page</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Vendeurs</span>
+                </div>
+                <div class="visual-preview-content" style="background:#0a0f1a;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                    <div style="display:flex;gap:8px;">
+                      <div style="background:#1e293b;padding:8px 16px;border-radius:8px;font-size:0.85rem;">Tous <span style="color:#6366f1;">24</span></div>
+                      <div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);padding:8px 16px;border-radius:8px;font-size:0.85rem;color:#10b981;">B1 <span>5</span></div>
+                      <div style="background:#1e293b;padding:8px 16px;border-radius:8px;font-size:0.85rem;">B2 <span style="color:#64748b;">8</span></div>
+                      <div style="background:#1e293b;padding:8px 16px;border-radius:8px;font-size:0.85rem;">B3 <span style="color:#64748b;">6</span></div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:10px 20px;border-radius:8px;font-weight:600;font-size:0.9rem;">+ Nouveau vendeur</div>
+                  </div>
+                  <div style="background:#111827;border:1px solid #1e293b;border-radius:12px;overflow:hidden;">
+                    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px;padding:12px 16px;background:#1e293b;font-size:0.8rem;color:#64748b;text-transform:uppercase;">
+                      <div>Vendeur</div><div>Scoring</div><div>Statut</div><div>Dernier contact</div><div></div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px;padding:16px;border-bottom:1px solid #1e293b;align-items:center;">
+                      <div><div style="font-weight:600;">M. Dupont</div><div style="font-size:0.8rem;color:#64748b;">14 rue des Lilas, Annecy</div></div>
+                      <div><span style="background:rgba(16,185,129,0.15);color:#10b981;padding:4px 12px;border-radius:999px;font-weight:600;font-size:0.85rem;">B1</span></div>
+                      <div><span style="color:#22d3ee;font-size:0.85rem;">En négociation</span></div>
+                      <div style="font-size:0.85rem;color:#94a3b8;">Il y a 2 jours</div>
+                      <div style="color:#64748b;cursor:pointer;">•••</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px;padding:16px;border-bottom:1px solid #1e293b;align-items:center;">
+                      <div><div style="font-weight:600;">Mme Martin</div><div style="font-size:0.8rem;color:#64748b;">8 av. du Lac, Annecy</div></div>
+                      <div><span style="background:rgba(34,211,238,0.15);color:#22d3ee;padding:4px 12px;border-radius:999px;font-weight:600;font-size:0.85rem;">B2</span></div>
+                      <div><span style="color:#f59e0b;font-size:0.85rem;">À recontacter</span></div>
+                      <div style="font-size:0.85rem;color:#94a3b8;">Il y a 5 jours</div>
+                      <div style="color:#64748b;cursor:pointer;">•••</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Variables locales de la page</div>
+              <div class="input-preview">
+                <span class="input-preview-label">Variables à créer</span>
+                <span class="input-preview-value">filterScoring (String, "all") | filterStatut (String, "all") | searchQuery (String, "") | showModal (Boolean, false) | selectedVendeur (Object, null)</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 3 : Filtres par scoring -->
+        <article class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">3</div>
+              <div class="step-info">
+                <h3>Implémenter les filtres par scoring</h3>
+                <p>Onglets B1, B2, B3, B4, B5</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="3"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Formule de filtrage</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Filtrer les vendeurs</span></div>
+                <div class="code-content">// Dans le Repeater, bind sur cette formule :
+{{vendeurs.data.filter(v => {
+  // Filtre par scoring
+  if (filterScoring !== 'all' && v.scoring !== filterScoring) return false;
+  
+  // Filtre par statut
+  if (filterStatut !== 'all' && v.statut_vendeur !== filterStatut) return false;
+  
+  // Filtre par recherche
+  if (searchQuery && searchQuery.length > 0) {
+    const search = searchQuery.toLowerCase();
+    const nom = (v.nom || '').toLowerCase();
+    const prenom = (v.prenom || '').toLowerCase();
+    const adresse = (v.adresse_bien || '').toLowerCase();
+    if (!nom.includes(search) && !prenom.includes(search) && !adresse.includes(search)) {
+      return false;
+    }
+  }
+  
+  return true;
+})}}</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Workflow au clic sur un onglet</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Changer le filtre</span></div>
+                <div class="code-content">// Au clic sur l'onglet "B1"
+Action: Change variable
+Variable: filterScoring
+Value: "B1"
+
+// Au clic sur "Tous"
+Value: "all"</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Compteur par scoring</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Nombre de vendeurs B1</span></div>
+                <div class="code-content">{{vendeurs.data.filter(v => v.scoring === 'B1').length}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 4 : Formule calcul scoring -->
+        <article class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">4</div>
+              <div class="step-info">
+                <h3>Formule de calcul du scoring</h3>
+                <p>Calculer B1-B5 automatiquement</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="4"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Fonction de calcul complète</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Calcul du score et du niveau</span></div>
+                <div class="code-content">// Fonction à utiliser dans les formulaires
+function calculateScoring(vendeur) {
+  let score = 0;
+  
+  // MOTIVATION (sur 30)
+  switch(vendeur.niveau_motivation) {
+    case 'urgent': score += 30; break;      // Divorce, succession, mutation
+    case 'projet_defini': score += 20; break; // Délai < 3 mois
+    case 'projet_vague': score += 5; break;   // "On verra"
+    default: score += 0;                       // Curieux
+  }
+  
+  // PRIX (sur 25)
+  switch(vendeur.niveau_prix) {
+    case 'aligne': score += 25; break;        // Prix marché
+    case 'legerement_haut': score += 15; break; // +5-10%
+    case 'haut_negociable': score += 10; break; // Élevé mais négociable
+    default: score += 0;                        // Délirant
+  }
+  
+  // EXCLUSIVITÉ (sur 25)
+  switch(vendeur.niveau_exclusivite) {
+    case 'accepte': score += 25; break;       // OK exclusivité
+    case 'ouvert': score += 15; break;        // À discuter
+    case 'simple': score += 5; break;         // Mandat simple
+    default: score += 0;                       // Multi-agences
+  }
+  
+  // DISPONIBILITÉ (sur 20)
+  switch(vendeur.niveau_disponibilite) {
+    case 'disponible': score += 20; break;    // Répond vite
+    case 'contraintes': score += 10; break;   // Avec contraintes
+    case 'difficile': score += 5; break;      // Difficile à joindre
+    default: score += 0;                       // Injoignable
+  }
+  
+  // Déterminer le niveau B1-B5
+  let niveau;
+  if (score >= 80) niveau = 'B1';
+  else if (score >= 60) niveau = 'B2';
+  else if (score >= 40) niveau = 'B3';
+  else if (score >= 20) niveau = 'B4';
+  else niveau = 'B5';
+  
+  return { score, niveau };
+}</div>
+              </div>
+            </div>
+            <div class="warning">
+              <span class="tip-icon">⚠️</span>
+              <div class="warning-content"><strong>Important :</strong> Dans WeWeb, tu ne peux pas définir de fonction. Tu devras écrire cette logique directement dans le workflow ou utiliser une formule inline.</div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Version inline pour WeWeb</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Formule inline</span></div>
+                <div class="code-content">// Calcul du score total
+{{
+  (formMotivation === 'urgent' ? 30 : formMotivation === 'projet_defini' ? 20 : formMotivation === 'projet_vague' ? 5 : 0) +
+  (formPrix === 'aligne' ? 25 : formPrix === 'legerement_haut' ? 15 : formPrix === 'haut_negociable' ? 10 : 0) +
+  (formExclusivite === 'accepte' ? 25 : formExclusivite === 'ouvert' ? 15 : formExclusivite === 'simple' ? 5 : 0) +
+  (formDisponibilite === 'disponible' ? 20 : formDisponibilite === 'contraintes' ? 10 : formDisponibilite === 'difficile' ? 5 : 0)
+}}
+
+// Déterminer B1-B5 depuis le score
+{{
+  (score >= 80) ? 'B1' :
+  (score >= 60) ? 'B2' :
+  (score >= 40) ? 'B3' :
+  (score >= 20) ? 'B4' : 'B5'
+}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 5 : Modal création vendeur -->
+        <article class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">5</div>
+              <div class="step-info">
+                <h3>Créer la modal "Nouveau vendeur"</h3>
+                <p>Formulaire de création avec scoring</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~25 min</span>
+              <div class="step-checkbox" data-step="5"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Structure du formulaire</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Champs du formulaire</span></div>
+                <div class="code-content">// INFORMATIONS PERSONNELLES
+formNom          (String)    - Nom du vendeur
+formPrenom       (String)    - Prénom
+formTelephone    (String)    - Téléphone
+formEmail        (String)    - Email
+
+// INFORMATIONS BIEN
+formAdresseBien  (String)    - Adresse du bien
+formTypeBien     (String)    - Maison, Appartement, Terrain...
+formSurface      (Number)    - Surface en m²
+formPrixSouhaite (Number)    - Prix souhaité par le vendeur
+formPrixEstime   (Number)    - Ton estimation
+
+// SCORING
+formMotivation     (String)  - urgent | projet_defini | projet_vague | curieux
+formPrix           (String)  - aligne | legerement_haut | haut_negociable | delirant
+formExclusivite    (String)  - accepte | ouvert | simple | multi
+formDisponibilite  (String)  - disponible | contraintes | difficile | injoignable
+
+// NOTES
+formNotes        (String)    - Notes libres</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Aperçu de la modal</div>
+              <div class="visual-preview">
+                <div class="visual-preview-header">
+                  <span class="visual-preview-dot red"></span>
+                  <span class="visual-preview-dot yellow"></span>
+                  <span class="visual-preview-dot green"></span>
+                  <span class="visual-preview-title">Modal - Nouveau vendeur</span>
+                </div>
+                <div class="visual-preview-content" style="background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:flex-start;padding:40px;">
+                  <div style="background:#111827;border:1px solid #1e293b;border-radius:16px;width:100%;max-width:600px;max-height:400px;overflow:hidden;">
+                    <div style="padding:20px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between;align-items:center;">
+                      <h3 style="font-size:1.1rem;">Nouveau vendeur</h3>
+                      <div style="width:32px;height:32px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</div>
+                    </div>
+                    <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                      <div>
+                        <label style="font-size:0.8rem;color:#64748b;display:block;margin-bottom:6px;">Nom</label>
+                        <div style="background:#0a0f1a;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#94a3b8;">Dupont</div>
+                      </div>
+                      <div>
+                        <label style="font-size:0.8rem;color:#64748b;display:block;margin-bottom:6px;">Prénom</label>
+                        <div style="background:#0a0f1a;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#94a3b8;">Jean</div>
+                      </div>
+                      <div style="grid-column:span 2;">
+                        <label style="font-size:0.8rem;color:#64748b;display:block;margin-bottom:6px;">Motivation</label>
+                        <div style="display:flex;gap:8px;">
+                          <div style="background:rgba(16,185,129,0.15);border:1px solid #10b981;padding:8px 16px;border-radius:8px;font-size:0.85rem;color:#10b981;">Urgent</div>
+                          <div style="background:#1e293b;padding:8px 16px;border-radius:8px;font-size:0.85rem;color:#94a3b8;">Projet défini</div>
+                          <div style="background:#1e293b;padding:8px 16px;border-radius:8px;font-size:0.85rem;color:#94a3b8;">Vague</div>
+                          <div style="background:#1e293b;padding:8px 16px;border-radius:8px;font-size:0.85rem;color:#94a3b8;">Curieux</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="padding:20px;border-top:1px solid #1e293b;display:flex;justify-content:flex-end;gap:12px;">
+                      <div style="padding:10px 20px;border-radius:8px;background:#1e293b;font-size:0.9rem;">Annuler</div>
+                      <div style="padding:10px 20px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);font-weight:600;font-size:0.9rem;">Créer</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content"><strong>Afficher/masquer la modal :</strong><br>Condition d'affichage : <code>{{showModal === true}}</code></div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 6 : Workflow création -->
+        <article class="step" data-step="6">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">6</div>
+              <div class="step-info">
+                <h3>Workflow de création vendeur</h3>
+                <p>Insérer dans Supabase avec scoring calculé</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="6"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Workflow handleCreateVendeur</div>
+              <div style="background:rgba(15,23,42,0.5);border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0;">
+                <div class="workflow-step">
+                  <div class="workflow-num primary">1</div>
+                  <div><strong>Change variable</strong><br><span style="color:var(--text-muted);">isLoading → true</span></div>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-num warning">2</div>
+                  <div><strong style="color:var(--accent-warning);">Calculer le score</strong><br><span style="color:var(--text-muted);">Variable locale "calculatedScore" avec la formule inline</span></div>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-num warning">3</div>
+                  <div><strong style="color:var(--accent-warning);">Déterminer le niveau</strong><br><span style="color:var(--text-muted);">Variable "calculatedNiveau" = B1/B2/B3/B4/B5</span></div>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-num success">4</div>
+                  <div><strong style="color:var(--accent-success);">Supabase - Insert</strong><br><span style="color:var(--text-muted);">Table: vendeurs<br>Data: { agent_id: user.id, nom: formNom, prenom: formPrenom, ..., score_total: calculatedScore, scoring: calculatedNiveau }</span></div>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-num success">5</div>
+                  <div><strong style="color:var(--accent-success);">Refresh collection</strong><br><span style="color:var(--text-muted);">Collection: vendeurs</span></div>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-num primary">6</div>
+                  <div><strong>Change variable</strong><br><span style="color:var(--text-muted);">showModal → false, isLoading → false</span></div>
+                </div>
+                <div class="workflow-step">
+                  <div class="workflow-num primary">7</div>
+                  <div><strong>Reset form variables</strong><br><span style="color:var(--text-muted);">formNom → "", formPrenom → "", etc.</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Data à envoyer</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Objet pour l'insert</span></div>
+                <div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "nom": "{{formNom}}",
+  "prenom": "{{formPrenom}}",
+  "telephone": "{{formTelephone}}",
+  "email": "{{formEmail}}",
+  "adresse_bien": "{{formAdresseBien}}",
+  "type_bien": "{{formTypeBien}}",
+  "surface_bien": {{formSurface}},
+  "prix_souhaite": {{formPrixSouhaite}},
+  "prix_estime": {{formPrixEstime}},
+  "niveau_motivation": "{{formMotivation}}",
+  "niveau_prix": "{{formPrix}}",
+  "niveau_exclusivite": "{{formExclusivite}}",
+  "niveau_disponibilite": "{{formDisponibilite}}",
+  "score_total": {{calculatedScore}},
+  "scoring": "{{calculatedNiveau}}",
+  "notes": "{{formNotes}}",
+  "statut_vendeur": "nouveau"
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ÉTAPE 7-18 : Suite des fonctionnalités -->
+        <article class="step" data-step="7">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">7</div>
+              <div class="step-info">
+                <h3>Page détail vendeur</h3>
+                <p>Fiche complète avec historique</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~20 min</span>
+              <div class="step-checkbox" data-step="7"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Créer la page</div>
+              <div class="input-preview">
+                <span class="input-preview-label">Configuration</span>
+                <span class="input-preview-value">Nom: VendeurDetail | URL: /vendeurs/:id | Layout: MainLayout</span>
+              </div>
+              <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content"><strong>:id</strong> est un paramètre dynamique. WeWeb le récupère via <code>{{page.params.id}}</code></div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Charger le vendeur</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Collection avec filtre</span></div>
+                <div class="code-content">// Crée une collection "vendeurCourant"
+Table: vendeurs
+Filter: id = {{page.params.id}}
+Limit: 1</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="8">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">8</div>
+              <div class="step-info">
+                <h3>Éditer un vendeur</h3>
+                <p>Formulaire d'édition avec recalcul scoring</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="8"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Pré-remplir le formulaire</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Initialisation</span></div>
+                <div class="code-content">// Au clic sur "Modifier", copie les valeurs du vendeur dans les variables du formulaire
+formNom = vendeurCourant.data[0].nom
+formPrenom = vendeurCourant.data[0].prenom
+// etc.</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Workflow de mise à jour</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Supabase Update</span></div>
+                <div class="code-content">Action: Supabase - Update
+Table: vendeurs
+Filter: id = {{page.params.id}}
+Data: { ...mêmes champs que création, avec score recalculé }</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="9">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">9</div>
+              <div class="step-info">
+                <h3>Historique des interactions</h3>
+                <p>Timeline des contacts avec le vendeur</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="9"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Collection historique</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Charger l'historique</span></div>
+                <div class="code-content">// Collection "historiqueVendeur"
+Table: historique_interactions
+Filter: vendeur_id = {{page.params.id}}
+Order: created_at DESC</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Ajouter une interaction</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Insert historique</span></div>
+                <div class="code-content">{
+  "vendeur_id": "{{page.params.id}}",
+  "agent_id": "{{user.id}}",
+  "type_interaction": "{{formTypeInteraction}}", // appel, email, rdv, visite
+  "notes": "{{formNotesInteraction}}",
+  "date_interaction": "{{formDateInteraction}}"
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="10">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">10</div>
+              <div class="step-info">
+                <h3>Changer le statut vendeur</h3>
+                <p>Workflow de transition de statut</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="10"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Statuts possibles</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Cycle de vie vendeur</span></div>
+                <div class="code-content">nouveau       → Premier contact
+a_rappeler    → À recontacter
+en_negociation → Discussion mandat en cours
+mandat_signe  → Mandat signé ! 🎉
+perdu         → Perdu (a signé ailleurs, plus de projet)
+archive       → Archivé</div>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Workflow changeStatut</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Update statut</span></div>
+                <div class="code-content">Action: Supabase - Update
+Table: vendeurs
+Filter: id = {{vendeurId}}
+Data: { "statut_vendeur": "{{newStatut}}" }
+
+// Puis refresh la collection</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="11">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">11</div>
+              <div class="step-info">
+                <h3>Créer une tâche de rappel</h3>
+                <p>Planifier un rappel automatique</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="11"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Bouton "Planifier rappel"</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Insert tâche</span></div>
+                <div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "vendeur_id": "{{vendeurId}}",
+  "titre": "Rappeler {{vendeur.prenom}} {{vendeur.nom}}",
+  "description": "{{formRappelNotes}}",
+  "date_echeance": "{{formDateRappel}}",
+  "type_tache": "rappel",
+  "statut_tache": "a_faire"
+}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="12">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">12</div>
+              <div class="step-info">
+                <h3>Badge scoring visuel</h3>
+                <p>Composant badge coloré B1-B5</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="12"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Couleur selon scoring</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Style conditionnel</span></div>
+                <div class="code-content">// Background color
+{{item.scoring === 'B1' ? 'rgba(16, 185, 129, 0.15)' :
+  item.scoring === 'B2' ? 'rgba(34, 211, 238, 0.15)' :
+  item.scoring === 'B3' ? 'rgba(245, 158, 11, 0.15)' :
+  item.scoring === 'B4' ? 'rgba(249, 115, 22, 0.15)' :
+  'rgba(239, 68, 68, 0.15)'}}
+
+// Text color
+{{item.scoring === 'B1' ? '#10b981' :
+  item.scoring === 'B2' ? '#22d3ee' :
+  item.scoring === 'B3' ? '#f59e0b' :
+  item.scoring === 'B4' ? '#f97316' :
+  '#ef4444'}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="13">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">13</div>
+              <div class="step-info">
+                <h3>Recherche vendeurs</h3>
+                <p>Barre de recherche avec debounce</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="13"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Input de recherche</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Bind sur searchQuery</span></div>
+                <div class="code-content">// L'input est lié à la variable searchQuery
+// Le filtre dans le Repeater utilise déjà searchQuery
+// La recherche est donc automatique !</div>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">💡</span>
+              <div class="tip-content">WeWeb rafraîchit automatiquement quand une variable change. Pas besoin de debounce manuel pour des listes locales.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="14">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">14</div>
+              <div class="step-info">
+                <h3>Tri des vendeurs</h3>
+                <p>Tri par date, nom, scoring</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="14"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Variable de tri</div>
+              <div class="input-preview">
+                <span class="input-preview-label">Variables</span>
+                <span class="input-preview-value">sortField (String, "created_at") | sortOrder (String, "desc")</span>
+              </div>
+            </div>
+            <div class="instruction">
+              <div class="instruction-title">Formule de tri</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Sort dynamique</span></div>
+                <div class="code-content">{{filteredVendeurs.sort((a, b) => {
+  let valA = a[sortField];
+  let valB = b[sortField];
+  
+  // Pour les dates
+  if (sortField.includes('date') || sortField === 'created_at') {
+    valA = new Date(valA);
+    valB = new Date(valB);
+  }
+  
+  // Pour le scoring (ordre B1 < B2 < B3...)
+  if (sortField === 'scoring') {
+    const order = { 'B1': 1, 'B2': 2, 'B3': 3, 'B4': 4, 'B5': 5 };
+    valA = order[valA] || 99;
+    valB = order[valB] || 99;
+  }
+  
+  if (sortOrder === 'asc') {
+    return valA > valB ? 1 : -1;
+  } else {
+    return valA < valB ? 1 : -1;
+  }
+})}}</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="15">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">15</div>
+              <div class="step-info">
+                <h3>Export CSV</h3>
+                <p>Exporter la liste des vendeurs</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="15"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Fonction export</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Générer CSV</span></div>
+                <div class="code-content">// Cette fonctionnalité nécessite du JavaScript custom
+// Dans WeWeb, tu peux utiliser l'action "Execute JavaScript"
+
+const data = vendeurs.data;
+const headers = ['Nom', 'Prénom', 'Téléphone', 'Email', 'Adresse', 'Scoring', 'Statut'];
+const rows = data.map(v => [v.nom, v.prenom, v.telephone, v.email, v.adresse_bien, v.scoring, v.statut_vendeur]);
+
+const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+const blob = new Blob([csv], { type: 'text/csv' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'vendeurs.csv';
+a.click();</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="16">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">16</div>
+              <div class="step-info">
+                <h3>Supprimer/Archiver un vendeur</h3>
+                <p>Soft delete avec confirmation</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="16"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Archiver (recommandé)</div>
+              <div class="code-block">
+                <div class="code-header"><span class="code-label">Soft delete</span></div>
+                <div class="code-content">// Ne jamais supprimer vraiment, archiver !
+Action: Supabase - Update
+Table: vendeurs
+Filter: id = {{vendeurId}}
+Data: { "statut_vendeur": "archive" }</div>
+              </div>
+            </div>
+            <div class="warning">
+              <span class="tip-icon">⚠️</span>
+              <div class="warning-content"><strong>Toujours demander confirmation</strong> avant d'archiver. Utilise une modal de confirmation.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="17">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">17</div>
+              <div class="step-info">
+                <h3>Responsive mobile</h3>
+                <p>Adapter la liste aux petits écrans</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~15 min</span>
+              <div class="step-checkbox" data-step="17"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Vue carte sur mobile</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Sur mobile, affiche les vendeurs en cartes plutôt qu'en tableau.</p>
+              <ol class="steps-list">
+                <li>Passe en vue Mobile dans WeWeb</li>
+                <li>Masque le tableau (display: none)</li>
+                <li>Affiche un Repeater en mode carte</li>
+                <li>Chaque carte affiche : Nom, Scoring, Statut, bouton d'action</li>
+              </ol>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="18">
+          <div class="step-header">
+            <div class="step-header-left">
+              <div class="step-number">18</div>
+              <div class="step-info">
+                <h3>Tester le module Vendeurs</h3>
+                <p>Vérifier toutes les fonctionnalités</p>
+              </div>
+            </div>
+            <div class="step-header-right">
+              <span class="step-duration">~10 min</span>
+              <div class="step-checkbox" data-step="18"></div>
+              <div class="step-toggle">▼</div>
+            </div>
+          </div>
+          <div class="step-body">
+            <div class="instruction">
+              <div class="instruction-title">Checklist de test</div>
+              <ul style="list-style:none;margin:16px 0;">
+                <li style="padding:8px 0;">○ Créer un vendeur avec tous les champs</li>
+                <li style="padding:8px 0;">○ Le scoring B1-B5 est calculé automatiquement</li>
+                <li style="padding:8px 0;">○ Les filtres par scoring fonctionnent</li>
+                <li style="padding:8px 0;">○ La recherche trouve les vendeurs</li>
+                <li style="padding:8px 0;">○ La fiche détail affiche toutes les infos</li>
+                <li style="padding:8px 0;">○ L'édition met à jour et recalcule le scoring</li>
+                <li style="padding:8px 0;">○ L'historique des interactions s'affiche</li>
+                <li style="padding:8px 0;">○ Le changement de statut fonctionne</li>
+                <li style="padding:8px 0;">○ La création de tâche de rappel fonctionne</li>
+                <li style="padding:8px 0;">○ L'archivage fonctionne</li>
+              </ul>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">🎉</span>
+              <div class="tip-content"><strong>Phase 3 terminée !</strong><br>Tu as maintenant un CRM Vendeurs complet avec le système de scoring B1-B5 !</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <nav class="page-nav">
+        <a href="phase2-dashboard.html" class="page-nav-btn">
+          <span>←</span>
+          <div><div class="page-nav-label">Précédent</div><div class="page-nav-title">Phase 2 - Dashboard</div></div>
+        </a>
+        <a href="phase4-acquereurs.html" class="page-nav-btn">
+          <div style="text-align:right;"><div class="page-nav-label">Suivant</div><div class="page-nav-title">Phase 4 - Acquéreurs</div></div>
+          <span>→</span>
+        </a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY='suprealty_progress',PHASE_ID='phase3',TOTAL_STEPS=18;
+    function loadProgress(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return{}}}
+    function saveProgress(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
+    function updateUI(){const progress=loadProgress(),phaseProgress=progress[PHASE_ID]||{completed:0,steps:{}},completedCount=Object.values(phaseProgress.steps||{}).filter(Boolean).length;document.getElementById('progress-text').textContent=completedCount+'/'+TOTAL_STEPS+' étapes';document.getElementById('progress-fill').style.width=(completedCount/TOTAL_STEPS*100)+'%';document.querySelectorAll('.step').forEach(step=>{const stepNum=step.dataset.step,isCompleted=phaseProgress.steps&&phaseProgress.steps[stepNum],checkbox=step.querySelector('.step-checkbox');if(isCompleted){step.classList.add('completed');checkbox&&checkbox.classList.add('checked')}else{step.classList.remove('completed');checkbox&&checkbox.classList.remove('checked')}});updateSidebar(phaseProgress)}
+    function updateSidebar(phaseProgress){const nav=document.getElementById('sidebar-nav');nav.innerHTML='';for(let i=1;i<=TOTAL_STEPS;i++){const step=document.querySelector('.step[data-step="'+i+'"]'),title=step?step.querySelector('.step-info h3').textContent:'Étape '+i,isCompleted=phaseProgress.steps&&phaseProgress.steps[i],li=document.createElement('li');li.className='sidebar-nav-item'+(isCompleted?' completed':'');li.innerHTML='<span class="sidebar-nav-number">'+i+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+title+'</span>';li.onclick=function(){document.querySelector('.step[data-step="'+i+'"]').scrollIntoView({behavior:'smooth'})};nav.appendChild(li)}}
+    function toggleStep(el){document.querySelectorAll('.step.open').forEach(s=>{if(s!==el)s.classList.remove('open')});el.classList.toggle('open')}
+    function toggleCheckbox(stepNum){const progress=loadProgress();if(!progress[PHASE_ID])progress[PHASE_ID]={completed:0,steps:{}};progress[PHASE_ID].steps[stepNum]=!progress[PHASE_ID].steps[stepNum];progress[PHASE_ID].completed=Object.values(progress[PHASE_ID].steps).filter(Boolean).length;saveProgress(progress);updateUI()}
+    document.querySelectorAll('.step-header').forEach(header=>{header.addEventListener('click',function(e){if(e.target.closest('.step-checkbox'))return;toggleStep(header.closest('.step'))})});
+    document.querySelectorAll('.step-checkbox').forEach(checkbox=>{checkbox.addEventListener('click',function(e){e.stopPropagation();toggleCheckbox(checkbox.dataset.step)})});
+    updateUI();
+  </script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 4 - CRM Acquéreurs | SuPrealty Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg-dark:#0a0f1a;--bg-card:#111827;--bg-code:#0d1117;--accent-primary:#6366f1;--accent-secondary:#22d3ee;--accent-success:#10b981;--accent-warning:#f59e0b;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border:#1e293b;--gradient-primary:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#d946ef 100%);--radius:16px}
+    *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;line-height:1.6}
+    .header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}.header-left{display:flex;align-items:center;gap:16px}.back-btn{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--accent-primary);padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.9rem}.header-title{font-size:1.25rem;font-weight:700}.header-title span{color:var(--text-muted);font-weight:400}.header-progress{display:flex;align-items:center;gap:12px}.header-progress-text{font-size:0.9rem;color:var(--text-secondary)}.header-progress-bar{width:200px;height:8px;background:var(--border);border-radius:999px;overflow:hidden}.header-progress-fill{height:100%;background:linear-gradient(135deg,#10b981,#22d3ee);transition:width 0.3s}
+    .main-layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 65px)}@media(max-width:1024px){.main-layout{grid-template-columns:1fr}.sidebar{display:none}}
+    .sidebar{background:var(--bg-card);border-right:1px solid var(--border);padding:24px;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto}.sidebar-title{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:12px}.sidebar-nav{list-style:none}.sidebar-nav-item{padding:10px 12px;border-radius:8px;margin-bottom:4px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--text-secondary)}.sidebar-nav-item:hover{background:rgba(99,102,241,0.1)}.sidebar-nav-item.completed{color:var(--accent-success)}.sidebar-nav-number{width:24px;height:24px;background:var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600}.sidebar-nav-item.completed .sidebar-nav-number{background:rgba(16,185,129,0.2);color:var(--accent-success)}
+    .content{padding:32px;max-width:900px}.content-header{margin-bottom:32px}.content-phase{display:inline-block;background:var(--gradient-primary);color:white;padding:4px 12px;border-radius:999px;font-size:0.8rem;font-weight:600;margin-bottom:12px}.content-title{font-size:2rem;font-weight:800;margin-bottom:8px}.content-subtitle{font-size:1.1rem;color:var(--text-secondary)}
+    .step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}.step.completed{border-color:rgba(16,185,129,0.3)}.step.open{border-color:rgba(99,102,241,0.3)}.step-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}.step-header:hover{background:rgba(99,102,241,0.05)}.step-header-left{display:flex;align-items:center;gap:16px}.step-number{width:40px;height:40px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-primary)}.step.completed .step-number{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(34,211,238,0.1));border-color:rgba(16,185,129,0.3);color:var(--accent-success)}.step-info h3{font-size:1rem;font-weight:600;margin-bottom:4px}.step-info p{font-size:0.85rem;color:var(--text-muted)}.step-header-right{display:flex;align-items:center;gap:12px}.step-duration{font-size:0.8rem;color:var(--text-muted);background:var(--border);padding:4px 10px;border-radius:999px}.step-checkbox{width:24px;height:24px;border:2px solid #334155;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center}.step-checkbox.checked{background:var(--accent-success);border-color:var(--accent-success)}.step-checkbox.checked::after{content:'✓';color:white;font-weight:700}.step-toggle{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.3s}.step.open .step-toggle{transform:rotate(180deg)}.step-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}.step.open .step-body{display:block}
+    .instruction{margin-top:20px}.instruction-title{font-size:0.9rem;font-weight:600;color:var(--accent-secondary);margin-bottom:12px;display:flex;align-items:center;gap:8px}.instruction-title::before{content:'';width:4px;height:16px;background:var(--accent-secondary);border-radius:2px}
+    .tip{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(34,211,238,0.05));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:16px 20px;margin:16px 0;display:flex;gap:12px}.tip-icon{font-size:1.25rem}.tip-content{font-size:0.9rem;color:var(--text-secondary)}.tip-content strong{color:var(--accent-success)}
+    .code-block{background:var(--bg-code);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden}.code-header{background:var(--border);padding:10px 16px}.code-label{font-size:0.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace}.code-content{padding:16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.7;color:#e2e8f0;white-space:pre-wrap}
+    .page-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);gap:16px;flex-wrap:wrap}.page-nav-btn{display:flex;align-items:center;gap:12px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text-primary)}.page-nav-btn:hover{border-color:var(--accent-primary)}.page-nav-label{font-size:0.8rem;color:var(--text-muted)}.page-nav-title{font-weight:600}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 4 <span>/ CRM Acquéreurs</span></div>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/14 étapes</span>
+      <div class="header-progress-bar"><div class="header-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Étapes Phase 4</div>
+      <ul class="sidebar-nav" id="sidebar-nav"></ul>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <div class="content-phase">Phase 4 sur 10</div>
+        <h1 class="content-title">CRM Acquéreurs & Matching</h1>
+        <p class="content-subtitle">Gère tes acquéreurs potentiels et fais matcher automatiquement avec tes biens.</p>
+      </div>
+
+      <div id="steps-container">
+
+        <article class="step open" data-step="1">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">1</div><div class="step-info"><h3>Page liste acquéreurs</h3><p>Structure de base</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="1"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Collection acquereurs</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Requête Supabase</span></div><div class="code-content">Table: acquereurs
+Filter: agent_id = {{user.id}}
+Select: *
+Order: created_at DESC</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">2</div><div class="step-info"><h3>Formulaire création acquéreur</h3><p>Données de base</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~20 min</span><div class="step-checkbox" data-step="2"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Champs du formulaire</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Données acquéreur</span></div><div class="code-content">// IDENTITÉ
+nom, prenom, telephone, email
+
+// CRITÈRES RECHERCHE
+type_bien_recherche (maison, appartement, terrain...)
+surface_min, surface_max
+nb_chambres_min
+secteurs_recherches (array de villes/quartiers)
+
+// BUDGET
+budget_min, budget_max
+
+// FINANCEMENT
+type_financement (cash, credit, mixte)
+accord_principe (boolean)
+montant_apport
+
+// PROJET
+delai_achat (immédiat, 3_mois, 6_mois, 1_an)
+premiere_acquisition (boolean)
+
+// STATUT
+statut_acquereur (nouveau, actif, en_recherche, offre_en_cours, acheteur, perdu, archive)</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">3</div><div class="step-info"><h3>Filtres acquéreurs</h3><p>Par statut, budget, type</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="3"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Formule de filtrage</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Filtres combinés</span></div><div class="code-content">{{acquereurs.data.filter(a => {
+  if (filterStatut !== 'all' && a.statut_acquereur !== filterStatut) return false;
+  if (filterType !== 'all' && a.type_bien_recherche !== filterType) return false;
+  if (filterAccord && !a.accord_principe) return false;
+  if (filterBudgetMin && a.budget_max < filterBudgetMin) return false;
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    return (a.nom || '').toLowerCase().includes(q) ||
+           (a.prenom || '').toLowerCase().includes(q);
+  }
+  return true;
+})}}</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">4</div><div class="step-info"><h3>Page détail acquéreur</h3><p>Fiche complète</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="4"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Sections de la fiche</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Layout</span></div><div class="code-content">// Infos contact
+// Critères de recherche
+// Budget et financement
+// Biens correspondants (matching)
+// Historique des visites
+// Actions</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">5</div><div class="step-info"><h3>Algorithme de Matching</h3><p>Trouver les biens correspondants</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~25 min</span><div class="step-checkbox" data-step="5"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Filtrer les biens compatibles</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Matching de base</span></div><div class="code-content">{{biens.data.filter(bien => {
+  const acq = acquereurCourant.data[0];
+  
+  // Type de bien
+  if (acq.type_bien_recherche && bien.type_bien !== acq.type_bien_recherche) return false;
+  
+  // Surface
+  if (acq.surface_min && bien.surface < acq.surface_min) return false;
+  if (acq.surface_max && bien.surface > acq.surface_max) return false;
+  
+  // Chambres
+  if (acq.nb_chambres_min && bien.nb_chambres < acq.nb_chambres_min) return false;
+  
+  // Budget
+  if (acq.budget_max && bien.prix_vente > acq.budget_max) return false;
+  if (acq.budget_min && bien.prix_vente < acq.budget_min) return false;
+  
+  // Secteurs
+  if (acq.secteurs_recherches?.length > 0) {
+    const bienVille = (bien.ville || '').toLowerCase();
+    const secteurs = acq.secteurs_recherches.map(s => s.toLowerCase());
+    if (!secteurs.some(s => bienVille.includes(s))) return false;
+  }
+  
+  return bien.statut_bien === 'en_ligne';
+})}}</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="6">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">6</div><div class="step-info"><h3>Score de matching</h3><p>Calculer la compatibilité en %</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~20 min</span><div class="step-checkbox" data-step="6"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Calcul du score</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Score 0-100%</span></div><div class="code-content">function calculateMatchScore(bien, acquereur) {
+  let score = 0, maxScore = 0;
+  
+  // Type de bien (25 pts)
+  maxScore += 25;
+  if (!acquereur.type_bien_recherche || 
+      bien.type_bien === acquereur.type_bien_recherche) score += 25;
+  
+  // Budget (30 pts)
+  maxScore += 30;
+  if (bien.prix_vente >= (acquereur.budget_min || 0) && 
+      bien.prix_vente <= (acquereur.budget_max || Infinity)) {
+    score += 30;
+  } else if (bien.prix_vente <= acquereur.budget_max * 1.1) {
+    score += 15; // Proche du budget
+  }
+  
+  // Surface (20 pts)
+  maxScore += 20;
+  if (bien.surface >= (acquereur.surface_min || 0) && 
+      bien.surface <= (acquereur.surface_max || Infinity)) score += 20;
+  
+  // Chambres (15 pts)
+  maxScore += 15;
+  if (bien.nb_chambres >= (acquereur.nb_chambres_min || 0)) score += 15;
+  
+  // Localisation (10 pts)
+  maxScore += 10;
+  if (!acquereur.secteurs_recherches?.length || 
+      acquereur.secteurs_recherches.some(s => 
+        (bien.ville || '').toLowerCase().includes(s.toLowerCase())
+      )) score += 10;
+  
+  return Math.round((score / maxScore) * 100);
+}</div></div>
+            </div>
+            <div class="instruction"><div class="instruction-title">Badge coloré</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Couleur selon score</span></div><div class="code-content">{{score >= 80 ? '#10b981' :  // Vert
+  score >= 60 ? '#22d3ee' :  // Cyan
+  score >= 40 ? '#f59e0b' :  // Orange
+  '#ef4444'}}               // Rouge</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="7">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">7</div><div class="step-info"><h3>Afficher les matchs</h3><p>Liste des biens correspondants</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="7"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Section "Biens correspondants"</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Affiche une grille de cartes avec les biens triés par score de matching décroissant.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="8">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">8</div><div class="step-info"><h3>Planifier une visite</h3><p>Depuis la fiche acquéreur</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="8"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Workflow créer visite</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Insert visite</span></div><div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "acquereur_id": "{{acquereurId}}",
+  "bien_id": "{{selectedBienId}}",
+  "date_visite": "{{formDateVisite}}",
+  "heure_visite": "{{formHeureVisite}}",
+  "statut_visite": "planifiee"
+}</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="9">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">9</div><div class="step-info"><h3>Historique des visites</h3><p>Visites passées et à venir</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="9"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Collection visites acquéreur</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Requête</span></div><div class="code-content">Table: visites
+Filter: acquereur_id = {{acquereurId}}
+Select: *, biens(adresse, ville, prix_vente)
+Order: date_visite DESC</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="10">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">10</div><div class="step-info"><h3>Enregistrer une offre</h3><p>Offre d'achat</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="10"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Table offres</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Insert offre</span></div><div class="code-content">{
+  "agent_id": "{{user.id}}",
+  "acquereur_id": "{{acquereurId}}",
+  "bien_id": "{{bienId}}",
+  "montant_offre": {{formMontant}},
+  "conditions": "{{formConditions}}",
+  "validite_jours": {{formValidite}},
+  "statut_offre": "en_attente"
+}</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="11">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">11</div><div class="step-info"><h3>Changement de statut</h3><p>Suivi du parcours</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~10 min</span><div class="step-checkbox" data-step="11"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Statuts possibles</div>
+              <div class="code-block"><div class="code-header"><span class="code-label">Parcours acquéreur</span></div><div class="code-content">nouveau → actif → en_recherche → offre_en_cours → acheteur
+                                                    ↘ perdu
+                                                    ↘ archive</div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="12">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">12</div><div class="step-info"><h3>Historique interactions</h3><p>Timeline des contacts</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~15 min</span><div class="step-checkbox" data-step="12"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Même logique que vendeurs</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Réutilise la table historique_interactions avec type_entite = 'acquereur'.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="13">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">13</div><div class="step-info"><h3>Responsive mobile</h3><p>Adaptation mobile</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~10 min</span><div class="step-checkbox" data-step="13"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Ajustements</div>
+              <p style="color:var(--text-secondary);margin:12px 0;">Même logique que la phase 3 : cartes au lieu de tableau sur mobile.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step" data-step="14">
+          <div class="step-header">
+            <div class="step-header-left"><div class="step-number">14</div><div class="step-info"><h3>Tester le CRM Acquéreurs</h3><p>Validation</p></div></div>
+            <div class="step-header-right"><span class="step-duration">~10 min</span><div class="step-checkbox" data-step="14"></div><div class="step-toggle">▼</div></div>
+          </div>
+          <div class="step-body">
+            <div class="instruction"><div class="instruction-title">Checklist</div>
+              <ul style="list-style:none;margin:16px 0;">
+                <li style="padding:8px 0;">○ Créer un acquéreur avec critères</li>
+                <li style="padding:8px 0;">○ Les biens correspondants s'affichent</li>
+                <li style="padding:8px 0;">○ Le score de matching est calculé</li>
+                <li style="padding:8px 0;">○ Planifier une visite</li>
+                <li style="padding:8px 0;">○ Enregistrer une offre</li>
+                <li style="padding:8px 0;">○ Changer le statut</li>
+              </ul>
+            </div>
+            <div class="tip"><span class="tip-icon">🎉</span><div class="tip-content"><strong>Phase 4 terminée !</strong><br>Tu gères maintenant vendeurs ET acquéreurs avec matching automatique !</div></div>
+          </div>
+        </article>
+
+      </div>
+
+      <nav class="page-nav">
+        <a href="phase3-vendeurs.html" class="page-nav-btn"><span>←</span><div><div class="page-nav-label">Précédent</div><div class="page-nav-title">Phase 3 - Vendeurs</div></div></a>
+        <a href="phase5-pipeline.html" class="page-nav-btn"><div style="text-align:right;"><div class="page-nav-label">Suivant</div><div class="page-nav-title">Phase 5 - Pipeline</div></div><span>→</span></a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY='suprealty_progress',PHASE_ID='phase4',TOTAL_STEPS=14;
+    function loadProgress(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return{}}}
+    function saveProgress(p){localStorage.setItem(STORAGE_KEY,JSON.stringify(p))}
+    function updateUI(){const progress=loadProgress(),pp=progress[PHASE_ID]||{steps:{}},cc=Object.values(pp.steps||{}).filter(Boolean).length;document.getElementById('progress-text').textContent=cc+'/'+TOTAL_STEPS+' étapes';document.getElementById('progress-fill').style.width=(cc/TOTAL_STEPS*100)+'%';document.querySelectorAll('.step').forEach(s=>{const n=s.dataset.step,done=pp.steps&&pp.steps[n],cb=s.querySelector('.step-checkbox');if(done){s.classList.add('completed');cb&&cb.classList.add('checked')}else{s.classList.remove('completed');cb&&cb.classList.remove('checked')}});updateSidebar(pp)}
+    function updateSidebar(pp){const nav=document.getElementById('sidebar-nav');nav.innerHTML='';for(let i=1;i<=TOTAL_STEPS;i++){const s=document.querySelector('.step[data-step="'+i+'"]'),t=s?s.querySelector('.step-info h3').textContent:'Étape '+i,done=pp.steps&&pp.steps[i],li=document.createElement('li');li.className='sidebar-nav-item'+(done?' completed':'');li.innerHTML='<span class="sidebar-nav-number">'+i+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+t+'</span>';li.onclick=()=>document.querySelector('.step[data-step="'+i+'"]').scrollIntoView({behavior:'smooth'});nav.appendChild(li)}}
+    function toggleStep(el){document.querySelectorAll('.step.open').forEach(s=>{if(s!==el)s.classList.remove('open')});el.classList.toggle('open')}
+    function toggleCheckbox(n){const p=loadProgress();if(!p[PHASE_ID])p[PHASE_ID]={steps:{}};p[PHASE_ID].steps[n]=!p[PHASE_ID].steps[n];saveProgress(p);updateUI()}
+    document.querySelectorAll('.step-header').forEach(h=>h.addEventListener('click',e=>{if(e.target.closest('.step-checkbox'))return;toggleStep(h.closest('.step'))}));
+    document.querySelectorAll('.step-checkbox').forEach(c=>c.addEventListener('click',e=>{e.stopPropagation();toggleCheckbox(c.dataset.step)}));
+    updateUI();
+  </script>
+</body>
+</html>

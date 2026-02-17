@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuPrealty - Guide Complet WeWeb + Supabase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f1a;
+      --bg-card: #111827;
+      --bg-card-hover: #1a2235;
+      --accent-primary: #6366f1;
+      --accent-secondary: #22d3ee;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #1e293b;
+      --border-light: #334155;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      --gradient-success: linear-gradient(135deg, #10b981 0%, #22d3ee 100%);
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, #1a1f35 0%, var(--bg-dark) 100%);
+      padding: 60px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      width: 80px;
+      height: 80px;
+      background: var(--gradient-primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      margin: 0 auto 24px;
+      box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 8px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--accent-primary);
+      font-weight: 500;
+    }
+
+    .tag.supabase { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: var(--accent-success); }
+    .tag.weweb { background: rgba(34, 211, 238, 0.1); border-color: rgba(34, 211, 238, 0.3); color: var(--accent-secondary); }
+
+    .progress-section {
+      max-width: 900px;
+      margin: -40px auto 40px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .progress-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .progress-title { font-size: 1.25rem; font-weight: 700; }
+
+    .progress-stats { display: flex; gap: 24px; }
+
+    .progress-stat { text-align: right; }
+    .progress-stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-primary); }
+    .progress-stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+    .progress-bar-container {
+      height: 12px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--gradient-success);
+      border-radius: 999px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .progress-phases { display: flex; justify-content: space-between; gap: 4px; }
+
+    .progress-phase-dot {
+      width: 10%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .progress-phase-dot.completed { background: var(--accent-success); }
+    .progress-phase-dot.current { background: var(--accent-primary); box-shadow: 0 0 12px rgba(99, 102, 241, 0.5); }
+
+    .quickstart-section {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+
+    .quickstart-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    .quickstart-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .quickstart-title::before { content: '🚀 '; }
+
+    .quickstart-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .quickstart-step {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+
+    .quickstart-step-number {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .quickstart-step-title { font-weight: 600; margin-bottom: 4px; }
+    .quickstart-step-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+    .phases-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 28px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .phase-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .phase-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .phase-card.completed { border-color: rgba(16, 185, 129, 0.3); }
+
+    .phase-card.completed::before {
+      content: '✓';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 28px;
+      height: 28px;
+      background: var(--accent-success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .phase-card.current {
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
+    }
+
+    .phase-card.current::after {
+      content: 'EN COURS';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--accent-primary);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .phase-number {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .phase-card.completed .phase-number {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(34, 211, 238, 0.1));
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .phase-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .phase-description { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px; }
+
+    .phase-meta { display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-muted); }
+    .phase-meta-item { display: flex; align-items: center; gap: 6px; }
+
+    .phase-progress {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .phase-progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .phase-progress-fill {
+      height: 100%;
+      background: var(--gradient-success);
+      border-radius: 999px;
+    }
+
+    .phase-progress-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .info-section {
+      max-width: 1200px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .info-card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .info-card-title { font-weight: 600; margin-bottom: 8px; }
+    .info-card-content { font-size: 0.9rem; color: var(--text-secondary); }
+
+    .info-card-content code {
+      background: rgba(99, 102, 241, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--accent-primary);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer a { color: var(--accent-primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.8rem; }
+      .progress-stats { width: 100%; justify-content: space-between; }
+      .phases-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="hero-logo">SP</div>
+    <h1>SuPrealty</h1>
+    <p class="hero-subtitle">
+      Guide complet pas-à-pas pour construire ton CRM immobilier avec WeWeb et Supabase. 
+      De zéro au déploiement, même si tu es débutante.
+    </p>
+    <div class="hero-tags">
+      <span class="tag weweb">WeWeb</span>
+      <span class="tag supabase">Supabase</span>
+      <span class="tag">CRM Immobilier</span>
+      <span class="tag">10 Phases</span>
+      <span class="tag">~30 heures</span>
+    </div>
+  </section>
+
+  <section class="progress-section">
+    <div class="progress-card">
+      <div class="progress-header">
+        <div class="progress-title">📊 Progression Globale</div>
+        <div class="progress-stats">
+          <div class="progress-stat">
+            <div class="progress-stat-value" id="phases-completed">0/10</div>
+            <div class="progress-stat-label">Phases terminées</div>
+          </div>
+          <div class="progress-stat">
+            <div class="progress-stat-value" id="time-remaining">~30h</div>
+            <div class="progress-stat-label">Temps restant</div>
+          </div>
+          <div class="progress-stat">
+            <div class="progress-stat-value" id="percent-complete">0%</div>
+            <div class="progress-stat-label">Complété</div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="global-progress-bar"></div>
+      </div>
+      <div class="progress-phases" id="progress-phases"></div>
+    </div>
+  </section>
+
+  <section class="quickstart-section">
+    <div class="quickstart-card">
+      <h2 class="quickstart-title">Démarrage Rapide</h2>
+      <div class="quickstart-steps">
+        <div class="quickstart-step">
+          <div class="quickstart-step-number">1</div>
+          <div class="quickstart-step-title">Ouvre WeWeb</div>
+          <div class="quickstart-step-desc">Connecte-toi à ton projet SuPrealty</div>
+        </div>
+        <div class="quickstart-step">
+          <div class="quickstart-step-number">2</div>
+          <div class="quickstart-step-title">Ouvre Supabase</div>
+          <div class="quickstart-step-desc">Garde l'onglet ouvert pour les clés API</div>
+        </div>
+        <div class="quickstart-step">
+          <div class="quickstart-step-number">3</div>
+          <div class="quickstart-step-title">Suis les phases</div>
+          <div class="quickstart-step-desc">Clique sur Phase 1 et suis le guide</div>
+        </div>
+        <div class="quickstart-step">
+          <div class="quickstart-step-number">4</div>
+          <div class="quickstart-step-title">Coche les étapes</div>
+          <div class="quickstart-step-desc">Ta progression est sauvegardée</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="phases-section">
+    <h2 class="section-title">Les 10 Phases</h2>
+    <div class="phases-grid" id="phases-grid"></div>
+  </section>
+
+  <section class="info-section">
+    <div class="info-card">
+      <div class="info-card-icon">🔗</div>
+      <h3 class="info-card-title">Projet Supabase</h3>
+      <div class="info-card-content">
+        ID : <code>jpmzlixxixwllfnhylrp</code><br><br>
+        URL : <code>https://jpmzlixxixwllfnhylrp.supabase.co</code>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📁</div>
+      <h3 class="info-card-title">Tables Principales</h3>
+      <div class="info-card-content">
+        55 tables créées : agents, vendeurs, acquéreurs, biens, estimations, mandats, visites, ventes, coaches, programmes...
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🎨</div>
+      <h3 class="info-card-title">Design System</h3>
+      <div class="info-card-content">
+        Couleurs : Indigo (#6366f1), Cyan (#22d3ee), Vert (#10b981)<br>
+        Police : Inter
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>SuPrealty Guide - Créé pour Tat's avec ❤️</p>
+    <p style="margin-top: 8px;">
+      <a href="https://supabase.com/dashboard/project/jpmzlixxixwllfnhylrp" target="_blank">Ouvrir Supabase</a>
+      &nbsp;•&nbsp;
+      <a href="https://editor.weweb.io" target="_blank">Ouvrir WeWeb</a>
+    </p>
+  </footer>
+
+  <script>
+    const phases = [
+      { id: 1, title: "Auth & Layout", description: "Authentification Supabase, pages login/signup, layout principal avec sidebar", duration: "2-3h", steps: 15, file: "phase1-auth-layout.html", icon: "🔐" },
+      { id: 2, title: "Dashboard & Navigation", description: "Page d'accueil avec KPI, sidebar dynamique, navigation par profil", duration: "3-4h", steps: 12, file: "phase2-dashboard.html", icon: "📊" },
+      { id: 3, title: "CRM Vendeurs", description: "Liste, fiche détaillée, scoring B1-B5, CRUD complet, pipeline", duration: "4-5h", steps: 18, file: "phase3-vendeurs.html", icon: "👤" },
+      { id: 4, title: "CRM Acquéreurs", description: "Liste, fiche, critères de recherche, matching biens, pipeline", duration: "3-4h", steps: 14, file: "phase4-acquereurs.html", icon: "🏠" },
+      { id: 5, title: "Estimations & Pipeline", description: "RDV R1/R2, scoring ciblage, conversion mandat, vue Kanban", duration: "3-4h", steps: 16, file: "phase5-pipeline.html", icon: "📋" },
+      { id: 6, title: "Biens & Visites", description: "Fiches biens, galerie photos, gestion visites, comptes-rendus", duration: "2-3h", steps: 12, file: "phase6-biens.html", icon: "🏡" },
+      { id: 7, title: "Planning & Organisation", description: "Vue semaine, créneaux, templates, sessions prospection", duration: "2-3h", steps: 10, file: "phase7-planning.html", icon: "📅" },
+      { id: 8, title: "Module Coach", description: "Gestion coachés, sessions, programmes, suivi progression", duration: "2-3h", steps: 14, file: "phase8-coach.html", icon: "🎯" },
+      { id: 9, title: "Module MDB", description: "Projets marchand de biens, simulations, lots, planning travaux", duration: "2-3h", steps: 12, file: "phase9-mdb.html", icon: "🏗️" },
+      { id: 10, title: "Pricing & Déploiement", description: "Page pricing, landing publique, configuration domaine, mise en prod", duration: "1-2h", steps: 8, file: "phase10-deploy.html", icon: "🚀" }
+    ];
+
+    const STORAGE_KEY = 'suprealty_progress';
+
+    function loadProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch { return {}; }
+    }
+
+    function calculateStats(progress) {
+      let completedPhases = 0, totalSteps = 0, completedSteps = 0, remainingHours = 0;
+
+      phases.forEach(phase => {
+        totalSteps += phase.steps;
+        const p = progress[`phase${phase.id}`] || { completed: 0 };
+        completedSteps += p.completed || 0;
+        
+        if (p.completed >= phase.steps) completedPhases++;
+        else {
+          const [min, max] = phase.duration.split('-').map(x => parseInt(x));
+          remainingHours += ((min + max) / 2) * (1 - (p.completed || 0) / phase.steps);
+        }
+      });
+
+      return {
+        completedPhases,
+        totalPhases: phases.length,
+        percentComplete: Math.round((completedSteps / totalSteps) * 100),
+        remainingHours: Math.ceil(remainingHours)
+      };
+    }
+
+    function getCurrentPhase(progress) {
+      for (const phase of phases) {
+        const p = progress[`phase${phase.id}`] || { completed: 0 };
+        if (p.completed < phase.steps) return phase.id;
+      }
+      return phases.length;
+    }
+
+    function render() {
+      const progress = loadProgress();
+      const stats = calculateStats(progress);
+      const currentPhase = getCurrentPhase(progress);
+
+      document.getElementById('phases-completed').textContent = `${stats.completedPhases}/${stats.totalPhases}`;
+      document.getElementById('time-remaining').textContent = `~${stats.remainingHours}h`;
+      document.getElementById('percent-complete').textContent = `${stats.percentComplete}%`;
+      document.getElementById('global-progress-bar').style.width = `${stats.percentComplete}%`;
+
+      document.getElementById('progress-phases').innerHTML = phases.map(phase => {
+        const p = progress[`phase${phase.id}`] || { completed: 0 };
+        const completed = p.completed >= phase.steps;
+        const current = phase.id === currentPhase;
+        return `<div class="progress-phase-dot ${completed ? 'completed' : ''} ${current ? 'current' : ''}" onclick="window.location.href='${phase.file}'"></div>`;
+      }).join('');
+
+      document.getElementById('phases-grid').innerHTML = phases.map(phase => {
+        const p = progress[`phase${phase.id}`] || { completed: 0 };
+        const completed = p.completed >= phase.steps;
+        const current = phase.id === currentPhase;
+        const pct = Math.round((p.completed / phase.steps) * 100);
+
+        return `
+          <a href="${phase.file}" class="phase-card ${completed ? 'completed' : ''} ${current ? 'current' : ''}">
+            <div class="phase-number">${phase.icon}</div>
+            <h3 class="phase-title">Phase ${phase.id} — ${phase.title}</h3>
+            <p class="phase-description">${phase.description}</p>
+            <div class="phase-meta">
+              <div class="phase-meta-item">⏱️ ${phase.duration}</div>
+              <div class="phase-meta-item">📝 ${phase.steps} étapes</div>
+            </div>
+            ${!completed && p.completed > 0 ? `
+              <div class="phase-progress">
+                <div class="phase-progress-bar"><div class="phase-progress-fill" style="width:${pct}%"></div></div>
+                <div class="phase-progress-text"><span>${p.completed}/${phase.steps}</span><span>${pct}%</span></div>
+              </div>
+            ` : ''}
+          </a>
+        `;
+      }).join('');
+    }
+
+    render();
+    window.addEventListener('storage', e => { if (e.key === STORAGE_KEY) render(); });
+  </script>
+</body>
+</html>
