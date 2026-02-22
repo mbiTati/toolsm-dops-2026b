@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 1 - Auth & Layout | SuPrealty Guide v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f1a;
+      --bg-card: #111827;
+      --bg-code: #0d1117;
+      --accent-primary: #6366f1;
+      --accent-secondary: #22d3ee;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #1e293b;
+      --border-light: #334155;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      --gradient-success: linear-gradient(135deg, #10b981 0%, #22d3ee 100%);
+      --radius: 16px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; }
+    
+    .header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .back-btn { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); color: var(--accent-primary); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .header-title { font-size: 1.25rem; font-weight: 700; }
+    .header-title span { color: var(--text-muted); font-weight: 400; }
+    .version-badge { background: linear-gradient(135deg, #10b981, #22d3ee); color: white; padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+    .header-progress { display: flex; align-items: center; gap: 12px; }
+    .header-progress-text { font-size: 0.9rem; color: var(--text-secondary); }
+    .header-progress-bar { width: 200px; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .header-progress-fill { height: 100%; background: var(--gradient-success); border-radius: 999px; }
+    
+    .main-layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 65px); }
+    @media (max-width: 1024px) { .main-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    
+    .sidebar { background: var(--bg-card); border-right: 1px solid var(--border); padding: 24px; position: sticky; top: 65px; height: calc(100vh - 65px); overflow-y: auto; }
+    .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 12px; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav-item { padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-secondary); transition: all 0.2s; }
+    .sidebar-nav-item:hover { background: rgba(99, 102, 241, 0.1); color: var(--text-primary); }
+    .sidebar-nav-item.completed { color: var(--accent-success); }
+    .sidebar-nav-number { width: 24px; height: 24px; background: var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    .sidebar-nav-item.completed .sidebar-nav-number { background: rgba(16, 185, 129, 0.2); color: var(--accent-success); }
+    
+    .content { padding: 32px; max-width: 900px; }
+    .content-header { margin-bottom: 32px; }
+    .content-phase { display: inline-block; background: var(--gradient-primary); color: white; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; }
+    .content-title { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .content-subtitle { font-size: 1.1rem; color: var(--text-secondary); }
+    
+    .info-box { background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .info-box-title { font-weight: 600; color: var(--accent-primary); margin-bottom: 8px; }
+    .info-box-content { font-size: 0.9rem; color: var(--text-secondary); }
+    
+    .section-divider { background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; padding: 16px 20px; margin: 32px 0 16px; }
+    .section-divider-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-primary); font-weight: 600; }
+    
+    .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+    .step.completed { border-color: rgba(16, 185, 129, 0.3); }
+    .step.open { border-color: rgba(99, 102, 241, 0.3); }
+    .step-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+    .step-header:hover { background: rgba(99, 102, 241, 0.05); }
+    .step-header-left { display: flex; align-items: center; gap: 16px; }
+    .step-number { width: 40px; height: 40px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1)); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--accent-primary); }
+    .step.completed .step-number { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(34, 211, 238, 0.1)); border-color: rgba(16, 185, 129, 0.3); color: var(--accent-success); }
+    .step-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .step-info p { font-size: 0.85rem; color: var(--text-muted); }
+    .step-header-right { display: flex; align-items: center; gap: 12px; }
+    .step-duration { font-size: 0.8rem; color: var(--text-muted); background: var(--border); padding: 4px 10px; border-radius: 999px; }
+    .step-new { font-size: 0.7rem; color: white; background: var(--accent-success); padding: 3px 8px; border-radius: 999px; font-weight: 600; }
+    .step-checkbox { width: 24px; height: 24px; border: 2px solid var(--border-light); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .step-checkbox.checked { background: var(--accent-success); border-color: var(--accent-success); }
+    .step-checkbox.checked::after { content: '✓'; color: white; font-weight: 700; font-size: 14px; }
+    .step-toggle { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: transform 0.3s; }
+    .step.open .step-toggle { transform: rotate(180deg); }
+    .step-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--border); }
+    .step.open .step-body { display: block; }
+    
+    .instruction { margin-top: 20px; }
+    .instruction-title { font-size: 0.9rem; font-weight: 600; color: var(--accent-secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .instruction-title::before { content: ''; width: 4px; height: 16px; background: var(--accent-secondary); border-radius: 2px; }
+    
+    .path-block { background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(99, 102, 241, 0.05)); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 16px 20px; margin: 12px 0; }
+    .path-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-secondary); margin-bottom: 8px; }
+    .path-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .path-step { background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.3); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; }
+    .path-arrow { color: var(--text-muted); font-size: 1.2rem; }
+    
+    .input-preview { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin: 8px 0; }
+    .input-preview-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
+    .input-preview-value { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent-secondary); }
+    
+    .tip { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(34, 211, 238, 0.05)); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 16px 20px; margin: 16px 0; display: flex; gap: 12px; }
+    .tip-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .tip-content { font-size: 0.9rem; color: var(--text-secondary); }
+    .tip-content strong { color: var(--accent-success); }
+    
+    .warning { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 16px 20px; margin: 16px 0; display: flex; gap: 12px; }
+    .warning-content { font-size: 0.9rem; color: var(--text-secondary); }
+    .warning-content strong { color: var(--accent-warning); }
+    
+    .workflow-step { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .workflow-step:last-child { border-bottom: none; }
+    .workflow-num { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+    .workflow-num.primary { background: rgba(99, 102, 241, 0.2); color: var(--accent-primary); }
+    .workflow-num.success { background: rgba(16, 185, 129, 0.2); color: var(--accent-success); }
+    .workflow-num.warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-warning); }
+    .workflow-num.auto { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+    
+    .auto-badge { display: inline-block; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 8px; }
+    
+    .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 8px; margin: 8px 0; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #e2e8f0; white-space: pre-wrap; }
+    
+    .visual-preview { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+    .visual-preview-header { background: var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 8px; }
+    .visual-preview-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .visual-preview-dot.red { background: #ef4444; }
+    .visual-preview-dot.yellow { background: #f59e0b; }
+    .visual-preview-dot.green { background: #10b981; }
+    .visual-preview-title { margin-left: auto; font-size: 0.8rem; color: var(--text-muted); }
+    .visual-preview-content { padding: 24px; }
+    
+    .steps-list { list-style: none; margin: 12px 0; counter-reset: step-counter; }
+    .steps-list li { padding: 12px 16px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 12px; font-size: 0.9rem; }
+    .steps-list li::before { content: counter(step-counter); counter-increment: step-counter; background: var(--accent-primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    
+    .page-nav { display: flex; justify-content: space-between; gap: 16px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .page-nav-btn { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; text-decoration: none; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
+    .page-nav-btn:hover { border-color: var(--accent-primary); }
+    .page-nav-label { font-size: 0.8rem; color: var(--text-muted); }
+    .page-nav-title { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn">← Retour</a>
+      <div class="header-title">Phase 1 <span>· Authentification & Layout</span></div>
+      <span class="version-badge">v2.0 - Trigger Auto</span>
+    </div>
+    <div class="header-progress">
+      <span class="header-progress-text" id="progress-text">0/18 étapes</span>
+      <div class="header-progress-bar">
+        <div class="header-progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">Étapes</div>
+      <ul class="sidebar-nav" id="sidebar-nav"></ul>
+    </aside>
+
+    <main class="content">
+      <div class="content-header">
+        <span class="content-phase">Phase 1</span>
+        <h1 class="content-title">Authentification & Layout</h1>
+        <p class="content-subtitle">Connexion Supabase, pages Login/Signup, et layout réutilisable</p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-title">🚀 Nouveautés v2.0</div>
+        <div class="info-box-content">
+          <strong>Trigger automatique Supabase :</strong> L'inscription crée automatiquement le profil agent + abonnement essai. Plus besoin d'INSERT manuel !<br><br>
+          <strong>Nouvelles pages :</strong> Landing Page + Page Paiement Stripe ajoutées (étapes 16-18).
+        </div>
+      </div>
+
+      <!-- SECTION: CONFIGURATION -->
+      <div class="section-divider">
+        <div class="section-divider-title">🔧 Configuration Supabase (Étapes 1-4)</div>
+      </div>
+
+      <!-- ÉTAPE 1 -->
+      <article class="step" data-step="1">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">1</div>
+            <div class="step-info">
+              <h3>Installer le plugin Supabase</h3>
+              <p>Connexion WeWeb ↔ Supabase</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~5 min</span>
+            <div class="step-checkbox" data-step="1"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Ajouter le plugin</div>
+            <div class="path-block">
+              <div class="path-label">Chemin dans WeWeb</div>
+              <div class="path-steps">
+                <span class="path-step">🧩 Plugins</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">➕ Add plugin</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">🔍 "Supabase"</span>
+              </div>
+            </div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">Configurer les clés</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Project URL</span>
+              <span class="input-preview-value">https://jpmzlixxixwllfnhylrp.supabase.co</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Anon Key</span>
+              <span class="input-preview-value">Depuis Supabase → Settings → API</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 2 -->
+      <article class="step" data-step="2">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">2</div>
+            <div class="step-info">
+              <h3>Activer l'authentification</h3>
+              <p>Enable Supabase Auth dans le plugin</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~2 min</span>
+            <div class="step-checkbox" data-step="2"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Activer Auth</div>
+            <div class="path-block">
+              <div class="path-label">Dans la config du plugin</div>
+              <div class="path-steps">
+                <span class="path-step">🧩 Plugins</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">Supabase</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">✅ Enable Auth</span>
+              </div>
+            </div>
+          </div>
+          <div class="warning">
+            <span class="tip-icon">⚠️</span>
+            <div class="warning-content"><strong>Désactive "Confirm email"</strong> pour les tests !<br>Supabase → Authentication → Settings</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 3 -->
+      <article class="step" data-step="3">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">3</div>
+            <div class="step-info">
+              <h3>Configurer les redirections</h3>
+              <p>URLs de redirection après auth</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~3 min</span>
+            <div class="step-checkbox" data-step="3"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Redirect URLs</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Site URL</span>
+              <span class="input-preview-value">https://ton-projet.weweb.io</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Redirect URLs</span>
+              <span class="input-preview-value">https://ton-projet.weweb.io/**</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 4 -->
+      <article class="step" data-step="4">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">4</div>
+            <div class="step-info">
+              <h3>Créer les variables globales</h3>
+              <p>user, userProfile, isAuthenticated</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~5 min</span>
+            <div class="step-checkbox" data-step="4"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Variables à créer</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Variable 1</span>
+              <span class="input-preview-value">user | Object | null | App (Global)</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Variable 2</span>
+              <span class="input-preview-value">userProfile | Object | null | App (Global)</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Variable 3</span>
+              <span class="input-preview-value">isAuthenticated | Boolean | false | App (Global)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SECTION: AUTH PAGES -->
+      <div class="section-divider">
+        <div class="section-divider-title">🔐 Pages d'authentification (Étapes 5-8)</div>
+      </div>
+
+      <!-- ÉTAPE 5 -->
+      <article class="step" data-step="5">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">5</div>
+            <div class="step-info">
+              <h3>Créer la page Login</h3>
+              <p>Page de connexion avec formulaire</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~10 min</span>
+            <div class="step-checkbox" data-step="5"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Créer la page</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Configuration</span>
+              <span class="input-preview-value">Nom: Login | URL: /login</span>
+            </div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">Variables locales</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Variables (Page scope)</span>
+              <span class="input-preview-value">loginEmail | loginPassword | loginError | isLoading</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 6 -->
+      <article class="step" data-step="6">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">6</div>
+            <div class="step-info">
+              <h3>Créer le workflow de connexion</h3>
+              <p>Action au clic sur "Se connecter"</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~15 min</span>
+            <div class="step-checkbox" data-step="6"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Workflow handleLogin</div>
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0;">
+              <div class="workflow-step">
+                <div class="workflow-num primary">1</div>
+                <div><strong>Change variable</strong> → isLoading = true</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">2</div>
+                <div><strong>Supabase Auth - Sign in</strong> → Email, Password</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num warning">3</div>
+                <div><strong>Condition</strong> → Si erreur, afficher message</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num primary">4</div>
+                <div><strong>Change variables</strong> → user, isAuthenticated = true</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">5</div>
+                <div><strong>Navigate to</strong> → /dashboard</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 7 - MISE À JOUR -->
+      <article class="step" data-step="7">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">7</div>
+            <div class="step-info">
+              <h3>Créer la page Signup avec sélection profil</h3>
+              <p>Formulaire + dropdown profil</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-new">MÀJ</span>
+            <span class="step-duration">~15 min</span>
+            <div class="step-checkbox" data-step="7"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">1. Créer la Collection "profils"</div>
+            <div class="path-block">
+              <div class="path-label">Chemin</div>
+              <div class="path-steps">
+                <span class="path-step">📊 Data</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">Collections</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">➕ Supabase</span>
+              </div>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Config</span>
+              <span class="input-preview-value">Table: profils | Columns: id, nom | Order: ordre ASC</span>
+            </div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">2. Variables locales</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Variables</span>
+              <span class="input-preview-value">signupFirstName | signupLastName | signupEmail | signupPassword | signupRole | signupError | isLoading</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">signupRole (important)</span>
+              <span class="input-preview-value">Type: String | Default: "mandataire"</span>
+            </div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">3. Dropdown de sélection profil</div>
+            <div class="path-block">
+              <div class="path-label">Configuration</div>
+              <div class="path-steps">
+                <span class="path-step">Add Dropdown</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">Options: profils</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">Label: nom | Value: id</span>
+              </div>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">📋</span>
+              <div class="tip-content"><strong>Les 3 profils :</strong> mandataire, mdb, coach</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 8 - MISE À JOUR MAJEURE -->
+      <article class="step" data-step="8">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">8</div>
+            <div class="step-info">
+              <h3>Workflow d'inscription (simplifié)</h3>
+              <p>Le trigger Supabase crée automatiquement l'agent !</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-new">MÀJ</span>
+            <span class="step-duration">~10 min</span>
+            <div class="step-checkbox" data-step="8"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="tip">
+            <span class="tip-icon">🚀</span>
+            <div class="tip-content"><strong>Trigger automatique !</strong> L'agent + abonnement essai sont créés automatiquement. Plus besoin d'INSERT manuel !</div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">Workflow handleSignup</div>
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0;">
+              <div class="workflow-step">
+                <div class="workflow-num primary">1</div>
+                <div><strong>Change variable</strong> → isLoading = true</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">2</div>
+                <div>
+                  <strong>Supabase Auth - Sign up</strong><br>
+                  Email: signupEmail | Password: signupPassword<br><br>
+                  <strong style="color: var(--accent-warning);">⚠️ Options → User Metadata :</strong>
+                  <div class="code-block">{
+  "prenom": "{{signupFirstName}}",
+  "nom": "{{signupLastName}}",
+  "profil_id": "{{signupRole}}"
+}</div>
+                </div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num auto">⚡</div>
+                <div><strong style="color: #a78bfa;">AUTOMATIQUE</strong><span class="auto-badge">Trigger</span><br>→ Crée agent + abonnement essai</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">3</div>
+                <div><strong>Navigate to</strong> → /dashboard</div>
+              </div>
+            </div>
+          </div>
+          <div class="warning">
+            <span class="tip-icon">⚠️</span>
+            <div class="warning-content"><strong>User Metadata obligatoires !</strong> Le trigger les utilise pour créer le profil.</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SECTION: LAYOUT -->
+      <div class="section-divider">
+        <div class="section-divider-title">🎨 Layout & Navigation (Étapes 9-12)</div>
+      </div>
+
+      <!-- ÉTAPE 9 -->
+      <article class="step" data-step="9">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">9</div>
+            <div class="step-info">
+              <h3>Créer le MainLayout</h3>
+              <p>Sidebar + Header réutilisables</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~20 min</span>
+            <div class="step-checkbox" data-step="9"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Créer le Layout</div>
+            <div class="path-block">
+              <div class="path-label">Chemin</div>
+              <div class="path-steps">
+                <span class="path-step">📄 Pages</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">📁 Layouts</span>
+                <span class="path-arrow">→</span>
+                <span class="path-step">➕ "MainLayout"</span>
+              </div>
+            </div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">Structure</div>
+            <ul class="steps-list">
+              <li>Container principal (Flexbox row)</li>
+              <li>Sidebar (240px) avec logo + navigation</li>
+              <li>Zone contenu avec Slot pour les pages</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 10 -->
+      <article class="step" data-step="10">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">10</div>
+            <div class="step-info">
+              <h3>Ajouter la vérification d'auth</h3>
+              <p>Rediriger vers /login si non connecté</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~10 min</span>
+            <div class="step-checkbox" data-step="10"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Workflow checkAuth (On page load)</div>
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0;">
+              <div class="workflow-step">
+                <div class="workflow-num success">1</div>
+                <div><strong>Supabase Auth - Get user</strong></div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num warning">2</div>
+                <div><strong>Condition</strong> → Si null → Navigate /login</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">3</div>
+                <div><strong>Supabase Select</strong> → Table agents WHERE id = user.id</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num primary">4</div>
+                <div><strong>Change variables</strong> → user, userProfile, isAuthenticated</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 11 -->
+      <article class="step" data-step="11">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">11</div>
+            <div class="step-info">
+              <h3>Créer la page Dashboard</h3>
+              <p>Page d'accueil après connexion</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~10 min</span>
+            <div class="step-checkbox" data-step="11"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Créer la page</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Configuration</span>
+              <span class="input-preview-value">Nom: Dashboard | URL: /dashboard | Layout: MainLayout</span>
+            </div>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">🔗</span>
+            <div class="tip-content"><strong>Afficher le prénom :</strong> Texte → Bind → {{userProfile.prenom}}</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 12 -->
+      <article class="step" data-step="12">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">12</div>
+            <div class="step-info">
+              <h3>Ajouter la déconnexion</h3>
+              <p>Bouton logout dans la sidebar</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~5 min</span>
+            <div class="step-checkbox" data-step="12"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Workflow handleLogout</div>
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0;">
+              <div class="workflow-step">
+                <div class="workflow-num success">1</div>
+                <div><strong>Supabase Auth - Sign out</strong></div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num primary">2</div>
+                <div><strong>Change variables</strong> → user = null, isAuthenticated = false</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">3</div>
+                <div><strong>Navigate to</strong> → /login</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SECTION: TESTS -->
+      <div class="section-divider">
+        <div class="section-divider-title">✅ Tests & Validation (Étapes 13-15)</div>
+      </div>
+
+      <!-- ÉTAPE 13 -->
+      <article class="step" data-step="13">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">13</div>
+            <div class="step-info">
+              <h3>Tester l'inscription</h3>
+              <p>Vérifier le trigger automatique</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~5 min</span>
+            <div class="step-checkbox" data-step="13"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Test du signup</div>
+            <ul class="steps-list">
+              <li>Va sur /signup</li>
+              <li>Remplis le formulaire + sélectionne un profil</li>
+              <li>Clique "Créer mon compte"</li>
+              <li>Vérifie dans Supabase : auth.users, agents, abonnements</li>
+            </ul>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">✅</span>
+            <div class="tip-content"><strong>Le trigger fonctionne si :</strong> auth.users + agents + abonnements ont tous une entrée avec le même ID</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 14 -->
+      <article class="step" data-step="14">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">14</div>
+            <div class="step-info">
+              <h3>Tester la connexion</h3>
+              <p>Login avec le compte créé</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~3 min</span>
+            <div class="step-checkbox" data-step="14"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Test du login</div>
+            <ul class="steps-list">
+              <li>Déconnecte-toi ou ouvre onglet privé</li>
+              <li>Va sur /login</li>
+              <li>Connecte-toi avec le compte créé</li>
+              <li>Vérifie l'affichage du prénom sur le Dashboard</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 15 -->
+      <article class="step" data-step="15">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">15</div>
+            <div class="step-info">
+              <h3>Résolution des problèmes</h3>
+              <p>Debug si quelque chose ne marche pas</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-duration">~5 min</span>
+            <div class="step-checkbox" data-step="15"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="warning">
+            <span class="tip-icon">🔧</span>
+            <div class="warning-content"><strong>"Invalid login credentials"</strong><br>→ Vérifie email/mdp | Désactive "Confirm email"</div>
+          </div>
+          <div class="warning">
+            <span class="tip-icon">🔧</span>
+            <div class="warning-content"><strong>Agent non créé</strong><br>→ Vérifie User Metadata dans le workflow signup</div>
+          </div>
+          <div class="warning">
+            <span class="tip-icon">🔧</span>
+            <div class="warning-content"><strong>Redirection échoue</strong><br>→ Vérifie checkAuth sur MainLayout</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- SECTION: LANDING & PAIEMENT -->
+      <div class="section-divider">
+        <div class="section-divider-title">🚀 Landing Page & Paiement (Étapes 16-18)</div>
+      </div>
+
+      <!-- ÉTAPE 16 -->
+      <article class="step" data-step="16">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">16</div>
+            <div class="step-info">
+              <h3>Créer la Landing Page</h3>
+              <p>Page d'accueil publique</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-new">NEW</span>
+            <span class="step-duration">~20 min</span>
+            <div class="step-checkbox" data-step="16"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Créer la page</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Configuration</span>
+              <span class="input-preview-value">Nom: Landing | URL: / | Layout: Aucun (Blank)</span>
+            </div>
+            <div class="tip">
+              <span class="tip-icon">🏠</span>
+              <div class="tip-content">La Landing Page est publique. Ne PAS utiliser MainLayout.</div>
+            </div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">Sections à inclure</div>
+            <ul class="steps-list">
+              <li><strong>Header</strong> : Logo + Connexion / Inscription</li>
+              <li><strong>Hero</strong> : Titre accrocheur + CTA</li>
+              <li><strong>Features</strong> : 3-4 fonctionnalités</li>
+              <li><strong>Pricing</strong> : Les 3 plans</li>
+              <li><strong>Footer</strong> : Liens légaux</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 17 -->
+      <article class="step" data-step="17">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">17</div>
+            <div class="step-info">
+              <h3>Créer la section Pricing</h3>
+              <p>Les 3 plans d'abonnement</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-new">NEW</span>
+            <span class="step-duration">~15 min</span>
+            <div class="step-checkbox" data-step="17"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="instruction">
+            <div class="instruction-title">Les 3 plans SuPrealty</div>
+            <div class="input-preview">
+              <span class="input-preview-label">Plan Gratuit</span>
+              <span class="input-preview-value">0€/mois | 5 vendeurs | 5 acquéreurs | Dashboard basique</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Plan Starter (populaire)</span>
+              <span class="input-preview-value">29€/mois | Illimité | Pipeline | Export PDF</span>
+            </div>
+            <div class="input-preview">
+              <span class="input-preview-label">Plan Pro</span>
+              <span class="input-preview-value">79€/mois | Multi-users | Simulateur MDB | Support prioritaire</span>
+            </div>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">💡</span>
+            <div class="tip-content">Tous les boutons → Navigate to /signup?plan=xxx</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ÉTAPE 18 -->
+      <article class="step" data-step="18">
+        <div class="step-header">
+          <div class="step-header-left">
+            <div class="step-number">18</div>
+            <div class="step-info">
+              <h3>Préparer l'intégration Stripe</h3>
+              <p>Architecture du flux de paiement</p>
+            </div>
+          </div>
+          <div class="step-header-right">
+            <span class="step-new">NEW</span>
+            <span class="step-duration">~10 min</span>
+            <div class="step-checkbox" data-step="18"></div>
+            <div class="step-toggle">▼</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="warning">
+            <span class="tip-icon">⚠️</span>
+            <div class="warning-content"><strong>Optionnel pour Phase 1</strong><br>L'intégration Stripe complète nécessite compte Stripe + Make.com</div>
+          </div>
+          <div class="instruction">
+            <div class="instruction-title">Flux de paiement</div>
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0;">
+              <div class="workflow-step">
+                <div class="workflow-num primary">1</div>
+                <div>Clic "Choisir Starter" → Redirect Stripe Checkout</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">2</div>
+                <div>Utilisateur paie sur Stripe</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num warning">3</div>
+                <div>Webhook Stripe → Make.com → Update Supabase</div>
+              </div>
+              <div class="workflow-step">
+                <div class="workflow-num success">4</div>
+                <div>Redirection vers /dashboard</div>
+              </div>
+            </div>
+          </div>
+          <div class="tip">
+            <span class="tip-icon">🎉</span>
+            <div class="tip-content"><strong>Félicitations !</strong> Phase 1 terminée ! Auth + Layout + bases pour le paiement.</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Navigation -->
+      <nav class="page-nav">
+        <a href="index.html" class="page-nav-btn">
+          <span>←</span>
+          <div>
+            <div class="page-nav-label">Retour</div>
+            <div class="page-nav-title">Hub Principal</div>
+          </div>
+        </a>
+        <a href="phase2-dashboard.html" class="page-nav-btn">
+          <div style="text-align: right;">
+            <div class="page-nav-label">Suivant</div>
+            <div class="page-nav-title">Phase 2 - Dashboard</div>
+          </div>
+          <span>→</span>
+        </a>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'suprealty_progress';
+    const PHASE_ID = 'phase1';
+    const TOTAL_STEPS = 18;
+
+    function loadProgress() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+    }
+
+    function saveProgress(progress) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function updateUI() {
+      const progress = loadProgress();
+      const phaseProgress = progress[PHASE_ID] || { completed: 0, steps: {} };
+      const completedCount = Object.values(phaseProgress.steps || {}).filter(Boolean).length;
+      
+      document.getElementById('progress-text').textContent = completedCount + '/' + TOTAL_STEPS + ' étapes';
+      document.getElementById('progress-fill').style.width = (completedCount / TOTAL_STEPS * 100) + '%';
+
+      document.querySelectorAll('.step').forEach(step => {
+        const stepNum = step.dataset.step;
+        const isCompleted = phaseProgress.steps && phaseProgress.steps[stepNum];
+        const checkbox = step.querySelector('.step-checkbox');
+        if (isCompleted) { step.classList.add('completed'); checkbox && checkbox.classList.add('checked'); }
+        else { step.classList.remove('completed'); checkbox && checkbox.classList.remove('checked'); }
+      });
+
+      updateSidebar(phaseProgress);
+    }
+
+    function updateSidebar(phaseProgress) {
+      const nav = document.getElementById('sidebar-nav');
+      nav.innerHTML = '';
+      for (let i = 1; i <= TOTAL_STEPS; i++) {
+        const step = document.querySelector('.step[data-step="' + i + '"]');
+        const title = step ? step.querySelector('.step-info h3').textContent : 'Étape ' + i;
+        const isCompleted = phaseProgress.steps && phaseProgress.steps[i];
+        const li = document.createElement('li');
+        li.className = 'sidebar-nav-item' + (isCompleted ? ' completed' : '');
+        li.innerHTML = '<span class="sidebar-nav-number">' + i + '</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + title + '</span>';
+        li.onclick = function() { document.querySelector('.step[data-step="' + i + '"]').scrollIntoView({ behavior: 'smooth' }); };
+        nav.appendChild(li);
+      }
+    }
+
+    function toggleStep(stepElement) {
+      document.querySelectorAll('.step.open').forEach(s => { if (s !== stepElement) s.classList.remove('open'); });
+      stepElement.classList.toggle('open');
+    }
+
+    function toggleCheckbox(stepNum) {
+      const progress = loadProgress();
+      if (!progress[PHASE_ID]) progress[PHASE_ID] = { completed: 0, steps: {} };
+      progress[PHASE_ID].steps[stepNum] = !progress[PHASE_ID].steps[stepNum];
+      progress[PHASE_ID].completed = Object.values(progress[PHASE_ID].steps).filter(Boolean).length;
+      saveProgress(progress);
+      updateUI();
+    }
+
+    document.querySelectorAll('.step-header').forEach(header => {
+      header.addEventListener('click', function(e) {
+        if (e.target.closest('.step-checkbox')) return;
+        toggleStep(header.closest('.step'));
+      });
+    });
+
+    document.querySelectorAll('.step-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleCheckbox(checkbox.dataset.step);
+      });
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
